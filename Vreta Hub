@@ -1,6 +1,6 @@
 -- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
 -- Compatible with Delta, Arceus X, CodeX, and Studio
--- Features: Squad Verified Badges () + Native +1 Tongue Escape Module
+-- Features: Squad Verified Badges () + Native Modules + Dual +1 Tongue Escape Options
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -295,6 +295,8 @@ local function addExternalScriptButton(name, rawUrl)
     end)
 end
 
+-- Restored external script alongside native version
+addExternalScriptButton("+1 Tongue Escape {Keyless}", "https://rawscripts.net/raw/UPDATE!-+1-Tongue-Escape-Keyless-or-10x-Auto-Tongue-or-Auto-Win-or-More..-228451")
 addExternalScriptButton("+1 Shrink Per Step {Keyless}", "https://scriptblox.com/raw/NEW-CUBES+1-Shrink-per-Step-Radium-Hub-Shrink-Per-Step-225259")
 addExternalScriptButton("MM2 {Keyless}", "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader")
 addExternalScriptButton("Infinite Yield Admin", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source")
