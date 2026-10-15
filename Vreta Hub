@@ -1,0 +1,673 @@
+-- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
+-- Compatible with Delta, Arceus X, CodeX, and Studio
+-- Features: Clean Floating Overhead Roles (No Head Boxes) & Exact Verified Badges
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- Verified Squad Roles Mapping (Exact Strings with No Spaces before )
+local squadRoles = {
+    [10789290369] = "Vreta Creator",
+    [9605585193]  = "Vreta Admin",
+    [8963902794]  = "Vreta Creator's BFF",
+    [11690731723] = "Vreta Admin",
+    [11046152137] = "Vreta Admin",
+    [6145072861]  = "Vreta Admin"
+}
+
+-- Safe GUI Parent Selection
+local parentGui = LocalPlayer:WaitForChild("PlayerGui")
+if gethui then
+    parentGui = gethui()
+elseif syn and syn.protect_gui then
+    parentGui = Instance.new("ScreenGui")
+    syn.protect_gui(parentGui)
+    parentGui.Parent = game:GetService("CoreGui")
+end
+
+-- ================= IN-GAME OVERHEAD VERIFIED BADGE SYSTEM (NO BOXES) =================
+local function applyOverheadBadge(player)
+    local roleTitle = squadRoles[player.UserId]
+    if not roleTitle then return end
+
+    local function setupChar(char)
+        local head = char:WaitForChild("Head", 10)
+        if not head then return end
+
+        if head:FindFirstChild("VretaVerifiedTag") then
+            head.VretaVerifiedTag:Destroy()
+        end
+
+        -- BillboardGui with zero background box
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "VretaVerifiedTag"
+        billboard.Adornee = head
+        billboard.Size = UDim2.new(0, 200, 0, 30)
+        billboard.StudsOffset = Vector3.new(0, 2.3, 0)
+        billboard.AlwaysOnTop = true
+        billboard.Parent = head
+
+        -- Pure floating text label
+        local tagText = Instance.new("TextLabel")
+        tagText.Size = UDim2.new(1, 0, 1, 0)
+        tagText.BackgroundTransparency = 1
+        tagText.Text = roleTitle
+        tagText.TextColor3 = Color3.fromRGB(200, 150, 255)
+        tagText.Font = Enum.Font.GothamBold
+        tagText.TextSize = 13
+        tagText.TextStrokeTransparency = 0.2
+        tagText.TextStrokeColor3 = Color3.fromRGB(20, 10, 35)
+        tagText.Parent = billboard
+    end
+
+    if player.Character then
+        task.spawn(setupChar, player.Character)
+    end
+    player.CharacterAdded:Connect(function(char)
+        task.spawn(setupChar, char)
+    end)
+end
+
+-- Apply overhead badges to current and future squad players in-game
+for _, p in ipairs(Players:GetPlayers()) do
+    applyOverheadBadge(p)
+end
+Players.PlayerAdded:Connect(applyOverheadBadge)
+
+
+-- Cleanup Old Loader Sessions
+if parentGui:FindFirstChild("VretaHubMasterLoader") then
+    parentGui.VretaHubMasterLoader:Destroy()
+end
+
+-- ScreenGui Setup (No Fullscreen Overlay)
+local loaderGui = Instance.new("ScreenGui")
+loaderGui.Name = "VretaHubMasterLoader"
+loaderGui.ResetOnSpawn = false
+loaderGui.Parent = parentGui
+
+-- Main Container Card
+local card = Instance.new("Frame")
+card.AnchorPoint = Vector2.new(0.5, 0.5)
+card.Size = UDim2.new(0, 390, 0, 340)
+card.Position = UDim2.new(0.5, 0, 0.5, 0)
+card.BackgroundColor3 = Color3.fromRGB(16, 16, 26)
+card.BorderSizePixel = 0
+card.Active = true
+card.Draggable = true
+card.Parent = loaderGui
+
+local cardCorner = Instance.new("UICorner")
+cardCorner.CornerRadius = UDim.new(0, 16)
+cardCorner.Parent = card
+
+local cardStroke = Instance.new("UIStroke")
+cardStroke.Color = Color3.fromRGB(175, 115, 255)
+cardStroke.Thickness = 2
+cardStroke.Transparency = 0.3
+cardStroke.Parent = card
+
+-- Aurora Gradient Accent
+local cardGradient = Instance.new("UIGradient")
+cardGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 16, 35)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(45, 25, 70)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(16, 16, 26))
+})
+cardGradient.Rotation = 45
+cardGradient.Parent = card
+
+-- Title Label
+local loaderTitle = Instance.new("TextLabel")
+loaderTitle.Size = UDim2.new(1, 0, 0, 32)
+loaderTitle.Position = UDim2.new(0, 0, 0.02, 0)
+loaderTitle.BackgroundTransparency = 1
+loaderTitle.Text = "🌙 VRETA HUB V1"
+loaderTitle.TextColor3 = Color3.fromRGB(200, 150, 255)
+loaderTitle.TextSize = 18
+loaderTitle.Font = Enum.Font.GothamBold
+loaderTitle.Parent = card
+
+-- Homie Squad Row (With Verified Badges )
+local squadFrame = Instance.new("Frame")
+squadFrame.Size = UDim2.new(0.9, 0, 0, 42)
+squadFrame.Position = UDim2.new(0.05, 0, 0.12, 0)
+squadFrame.BackgroundTransparency = 1
+squadFrame.Parent = card
+
+local squadLayout = Instance.new("UIListLayout")
+squadLayout.FillDirection = Enum.FillDirection.Horizontal
+squadLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+squadLayout.Padding = UDim.new(0, 8)
+squadLayout.Parent = squadFrame
+
+local squadList = {10789290369, 11690731723, 8963902794, 11046152137, 9605585193, 6145072861}
+
+for _, userId in ipairs(squadList) do
+    local avatarContainer = Instance.new("Frame")
+    avatarContainer.Size = UDim2.new(0, 36, 0, 36)
+    avatarContainer.BackgroundTransparency = 1
+    avatarContainer.Parent = squadFrame
+
+    local avatarImg = Instance.new("ImageLabel")
+    avatarImg.Size = UDim2.new(1, 0, 1, 0)
+    avatarImg.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+    avatarImg.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
+    avatarImg.Parent = avatarContainer
+    
+    local imgCorner = Instance.new("UICorner")
+    imgCorner.CornerRadius = UDim.new(1, 0)
+    imgCorner.Parent = avatarImg
+    
+    local imgStroke = Instance.new("UIStroke")
+    imgStroke.Color = Color3.fromRGB(140, 75, 230)
+    imgStroke.Thickness = 1.5
+    imgStroke.Parent = avatarImg
+
+    -- Verified Badge Icon Overlay ()
+    local badgeLabel = Instance.new("TextLabel")
+    badgeLabel.Size = UDim2.new(0, 14, 0, 14)
+    badgeLabel.Position = UDim2.new(1, -12, 1, -12)
+    badgeLabel.BackgroundTransparency = 1
+    badgeLabel.Text = ""
+    badgeLabel.TextColor3 = Color3.fromRGB(175, 115, 255)
+    badgeLabel.TextSize = 11
+    badgeLabel.Font = Enum.Font.GothamBold
+    badgeLabel.Parent = avatarContainer
+end
+
+-- ================= TOP MENU NAVIGATION BUTTONS =================
+local topNavFrame = Instance.new("Frame")
+topNavFrame.Size = UDim2.new(0.9, 0, 0, 36)
+topNavFrame.Position = UDim2.new(0.05, 0, 0.26, 0)
+topNavFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 32)
+topNavFrame.Parent = card
+
+local topNavCorner = Instance.new("UICorner")
+topNavCorner.CornerRadius = UDim.new(0, 8)
+topNavCorner.Parent = topNavFrame
+
+local btnVreta = Instance.new("TextButton")
+btnVreta.Size = UDim2.new(0.48, 0, 0.85, 0)
+btnVreta.Position = UDim2.new(0.01, 0, 0.075, 0)
+btnVreta.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+btnVreta.Text = "👑 Vreta Scripts"
+btnVreta.TextColor3 = Color3.fromRGB(255, 255, 255)
+btnVreta.Font = Enum.Font.GothamBold
+btnVreta.TextSize = 11
+btnVreta.Parent = topNavFrame
+
+local btnVretaCorner = Instance.new("UICorner")
+btnVretaCorner.CornerRadius = UDim.new(0, 6)
+btnVretaCorner.Parent = btnVreta
+
+local btnOthers = Instance.new("TextButton")
+btnOthers.Size = UDim2.new(0.48, 0, 0.85, 0)
+btnOthers.Position = UDim2.new(0.51, 0, 0.075, 0)
+btnOthers.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+btnOthers.Text = "🌐 Others Scripts"
+btnOthers.TextColor3 = Color3.fromRGB(180, 180, 200)
+btnOthers.Font = Enum.Font.GothamBold
+btnOthers.TextSize = 11
+btnOthers.Parent = topNavFrame
+
+local btnOthersCorner = Instance.new("UICorner")
+btnOthersCorner.CornerRadius = UDim.new(0, 6)
+btnOthersCorner.Parent = btnOthers
+
+-- PAGES CONTAINER
+local pageVreta = Instance.new("ScrollingFrame")
+pageVreta.Size = UDim2.new(0.9, 0, 0, 190)
+pageVreta.Position = UDim2.new(0.05, 0, 0.39, 0)
+pageVreta.BackgroundTransparency = 1
+pageVreta.ScrollBarThickness = 3
+pageVreta.AutomaticCanvasSize = Enum.AutomaticSize.Y
+pageVreta.Visible = true
+pageVreta.Parent = card
+
+local layoutVreta = Instance.new("UIListLayout")
+layoutVreta.Padding = UDim.new(0, 8)
+layoutVreta.Parent = pageVreta
+
+local pageOthers = Instance.new("ScrollingFrame")
+pageOthers.Size = UDim2.new(0.9, 0, 0, 190)
+pageOthers.Position = UDim2.new(0.05, 0, 0.39, 0)
+pageOthers.BackgroundTransparency = 1
+pageOthers.ScrollBarThickness = 3
+pageOthers.AutomaticCanvasSize = Enum.AutomaticSize.Y
+pageOthers.Visible = false
+pageOthers.Parent = card
+
+local layoutOthers = Instance.new("UIListLayout")
+layoutOthers.Padding = UDim.new(0, 8)
+layoutOthers.Parent = pageOthers
+
+-- TOP MENU TOGGLE EVENTS
+btnVreta.Activated:Connect(function()
+    pageVreta.Visible = true
+    pageOthers.Visible = false
+    btnVreta.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+    btnVreta.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btnOthers.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+    btnOthers.TextColor3 = Color3.fromRGB(180, 180, 200)
+end)
+
+btnOthers.Activated:Connect(function()
+    pageVreta.Visible = false
+    pageOthers.Visible = true
+    btnOthers.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+    btnOthers.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btnVreta.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+    btnVreta.TextColor3 = Color3.fromRGB(180, 180, 200)
+end)
+
+local function closeLoader()
+    TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+        Size = UDim2.new(0, 0, 0, 0),
+        BackgroundTransparency = 1
+    }):Play()
+    task.wait(0.4)
+    loaderGui:Destroy()
+end
+
+-- ================= PAGE 1: VRETA SCRIPTS (100% KEYLESS) =================
+local mm2Btn = Instance.new("TextButton")
+mm2Btn.Size = UDim2.new(1, -6, 0, 40)
+mm2Btn.BackgroundColor3 = Color3.fromRGB(130, 60, 220)
+mm2Btn.Text = "🔪 MM2 (Murder Mystery 2)"
+mm2Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+mm2Btn.Font = Enum.Font.GothamBold
+mm2Btn.TextSize = 12
+mm2Btn.Parent = pageVreta
+
+local mm2Corner = Instance.new("UICorner")
+mm2Corner.CornerRadius = UDim.new(0, 8)
+mm2Corner.Parent = mm2Btn
+
+local wasteTimeBtn = Instance.new("TextButton")
+wasteTimeBtn.Size = UDim2.new(1, -6, 0, 40)
+wasteTimeBtn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+wasteTimeBtn.Text = "⏳ Waste Time"
+wasteTimeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+wasteTimeBtn.Font = Enum.Font.GothamBold
+wasteTimeBtn.TextSize = 12
+wasteTimeBtn.Parent = pageVreta
+
+local wasteTimeCorner = Instance.new("UICorner")
+wasteTimeCorner.CornerRadius = UDim.new(0, 8)
+wasteTimeCorner.Parent = wasteTimeBtn
+
+-- ================= PAGE 2: OTHERS SCRIPTS (EXTERNAL LOADSTRINGS) =================
+local function addExternalScriptButton(name, rawUrl)
+    local extBtn = Instance.new("TextButton")
+    extBtn.Size = UDim2.new(1, -6, 0, 40)
+    extBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 46)
+    extBtn.Text = "⚡ " .. name
+    extBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    extBtn.Font = Enum.Font.GothamMedium
+    extBtn.TextSize = 11
+    extBtn.Parent = pageOthers
+
+    local extCorner = Instance.new("UICorner")
+    extCorner.CornerRadius = UDim.new(0, 8)
+    extCorner.Parent = extBtn
+
+    extBtn.Activated:Connect(function()
+        closeLoader()
+        pcall(function()
+            loadstring(game:HttpGet(rawUrl))()
+        end)
+    end)
+end
+
+-- External Community Loadstrings List:
+addExternalScriptButton("+1 Shrink Per Step {Keyless}", "https://scriptblox.com/raw/NEW-CUBES+1-Shrink-per-Step-Radium-Hub-Shrink-Per-Step-225259")
+addExternalScriptButton("MM2 {Keyless}", "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader")
+addExternalScriptButton("+1 Tongue Escape {Keyless}", "https://rawscripts.net/raw/UPDATE!-+1-Tongue-Escape-Keyless-or-10x-Auto-Tongue-or-Auto-Win-or-More..-228451")
+addExternalScriptButton("Infinite Yield Admin", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source")
+
+-- MM2 Native Launch Trigger
+mm2Btn.Activated:Connect(function()
+    closeLoader()
+    print("🌙 Vreta MM2 Loaded!")
+end)
+
+-- ========================================================
+-- CUSTOM WASTE TIME UI MODULE
+-- ========================================================
+wasteTimeBtn.Activated:Connect(function()
+    closeLoader()
+    
+    if parentGui:FindFirstChild("VretaWasteTimeGui") then 
+        parentGui.VretaWasteTimeGui:Destroy() 
+    end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaWasteTimeGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
+
+    -- Main Hub Frame
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 380, 0, 290)
+    main.Position = UDim2.new(0.5, -190, 0.35, -145)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
+
+    local mainCorner = Instance.new("UICorner")
+    mainCorner.CornerRadius = UDim.new(0, 12)
+    mainCorner.Parent = main
+
+    local mainStroke = Instance.new("UIStroke")
+    mainStroke.Color = Color3.fromRGB(175, 115, 255)
+    mainStroke.Thickness = 1.5
+    mainStroke.Parent = main
+
+    -- Top Header Bar
+    local topBar = Instance.new("Frame")
+    topBar.Size = UDim2.new(1, 0, 0, 38)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    topBar.Parent = main
+
+    local topCorner = Instance.new("UICorner")
+    topCorner.CornerRadius = UDim.new(0, 12)
+    topCorner.Parent = topBar
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -50, 1, 0)
+    title.Position = UDim2.new(0, 12, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "⏳ VRETA HUB — WASTE TIME"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 12
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.Parent = topBar
+
+    -- Floating Mobile Toggle Button
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 85, 0, 34)
+    toggleBtn.Position = UDim2.new(0, 15, 0.4, 0)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+    toggleBtn.Text = "⏳ VRETA"
+    toggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleBtn.Font = Enum.Font.GothamBold
+    toggleBtn.TextSize = 11
+    toggleBtn.Active = true
+    toggleBtn.Draggable = true
+    toggleBtn.Visible = false
+    toggleBtn.Parent = gui
+
+    local toggleCorner = Instance.new("UICorner")
+    toggleCorner.CornerRadius = UDim.new(0, 8)
+    toggleCorner.Parent = toggleBtn
+
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 26, 0, 26)
+    closeBtn.Position = UDim2.new(1, -32, 0, 6)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Parent = topBar
+
+    closeBtn.Activated:Connect(function() main.Visible = false; toggleBtn.Visible = true end)
+    toggleBtn.Activated:Connect(function() main.Visible = true; toggleBtn.Visible = false end)
+
+    -- Left Navigation Sidebar
+    local navBar = Instance.new("Frame")
+    navBar.Size = UDim2.new(0, 100, 1, -48)
+    navBar.Position = UDim2.new(0, 6, 0, 42)
+    navBar.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+    navBar.Parent = main
+
+    local navCorner = Instance.new("UICorner")
+    navCorner.CornerRadius = UDim.new(0, 8)
+    navCorner.Parent = navBar
+
+    local navLayout = Instance.new("UIListLayout")
+    navLayout.Padding = UDim.new(0, 4)
+    navLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    navLayout.Parent = navBar
+
+    -- Right Content Area
+    local contentArea = Instance.new("Frame")
+    contentArea.Size = UDim2.new(1, -118, 1, -48)
+    contentArea.Position = UDim2.new(0, 112, 0, 42)
+    contentArea.BackgroundTransparency = 1
+    contentArea.Parent = main
+
+    local tabs = {}
+    local function createTab(tabName)
+        local page = Instance.new("ScrollingFrame")
+        page.Size = UDim2.new(1, 0, 1, 0)
+        page.BackgroundTransparency = 1
+        page.ScrollBarThickness = 3
+        page.Visible = false
+        page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        page.Parent = contentArea
+        
+        local pageLayout = Instance.new("UIListLayout")
+        pageLayout.Padding = UDim.new(0, 6)
+        pageLayout.Parent = page
+        
+        local navBtn = Instance.new("TextButton")
+        navBtn.Size = UDim2.new(0.92, 0, 0, 28)
+        navBtn.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+        navBtn.Text = tabName
+        navBtn.TextColor3 = Color3.fromRGB(200, 200, 220)
+        navBtn.Font = Enum.Font.GothamMedium
+        navBtn.TextSize = 10
+        navBtn.Parent = navBar
+        
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 6)
+        btnCorner.Parent = navBtn
+        
+        navBtn.Activated:Connect(function()
+            for _, t in pairs(tabs) do
+                t.Page.Visible = false
+                t.Button.BackgroundColor3 = Color3.fromRGB(28, 28, 40)
+            end
+            page.Visible = true
+            navBtn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        end)
+        
+        tabs[tabName] = {Page = page, Button = navBtn}
+        return page
+    end
+
+    local function addActionButton(page, text, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, -6, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        btn.Parent = page
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.Activated:Connect(callback)
+    end
+
+    local function addToggle(page, text, callback)
+        local state = false
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, -6, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        btn.Parent = page
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 6)
+        corner.Parent = btn
+        
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+    end
+
+    -- Tab Instantiation
+    local tpPage = createTab("Teleports")
+    local playerPage = createTab("Player Mods")
+    local togglePage = createTab("Toggles")
+    local infoPage = createTab("Info")
+
+    tabs["Teleports"].Page.Visible = true
+    tabs["Teleports"].Button.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+
+    -- Player Helpers
+    local player = LocalPlayer
+    local function getRoot()
+        local c = player.Character
+        return c and c:FindFirstChild("HumanoidRootPart")
+    end
+    local function getHumanoid()
+        local c = player.Character
+        return c and c:FindFirstChildOfClass("Humanoid")
+    end
+
+    -- TAB 1: TELEPORTS & AUTO REBIRTH
+    local teleports = {
+        {name = "Spawn / Rebirth", pos = Vector3.new(17.022, 3.476, 1.211)},
+        {name = "The Library (10M)", pos = Vector3.new(20.010, 51.124, 30.474)},
+        {name = "Stars Zone", pos = Vector3.new(-189.233, 3.068, -5.366)},
+        {name = "The Future (50Qa)", pos = Vector3.new(2041.580, 1375.783, -2876.962)},
+        {name = "The Void (1Td)", pos = Vector3.new(1504.435, 1348.273, -2109.739)},
+        {name = "The Zenith (1Tvg)", pos = Vector3.new(1674.173, 381.373, -2857.851)},
+        {name = "Purgatory (10cd)", pos = Vector3.new(1205.001, 86.541, -2855.153)},
+        {name = "The Cyber (1Spqag)", pos = Vector3.new(1057.628, 1045.197, -2728.794)}
+    }
+
+    for _, tp in ipairs(teleports) do
+        addActionButton(tpPage, "📍 " .. tp.name, function()
+            local root = getRoot()
+            if root then root.CFrame = CFrame.new(tp.pos) end
+        end)
+    end
+
+    local autoRebirth = false
+    addToggle(tpPage, "🔄 Auto Rebirth Loop", function(active)
+        autoRebirth = active
+        if active then
+            task.spawn(function()
+                while autoRebirth do
+                    local root = getRoot()
+                    if root then root.CFrame = CFrame.new(17.022, 3.476, 1.211) end
+                    task.wait(0.5)
+                end
+            end)
+        end
+    end)
+
+    -- TAB 2: PLAYER MODS
+    local walkSpeedActive = false
+    addToggle(playerPage, "⚡ Speed Boost (100 Speed)", function(active)
+        walkSpeedActive = active
+        local hum = getHumanoid()
+        if hum then hum.WalkSpeed = active and 100 or 16 end
+    end)
+
+    local jumpPowerActive = false
+    addToggle(playerPage, "🦘 Super Jump (120 Power)", function(active)
+        jumpPowerActive = active
+        local hum = getHumanoid()
+        if hum then hum.JumpPower = active and 120 or 50 end
+    end)
+
+    player.CharacterAdded:Connect(function(char)
+        task.wait(0.5)
+        local hum = char:WaitForChild("Humanoid", 3)
+        if hum then
+            if walkSpeedActive then hum.WalkSpeed = 100 end
+            if jumpPowerActive then hum.JumpPower = 120 end
+        end
+    end)
+
+    addActionButton(playerPage, "💡 Fullbright", function()
+        Lighting.Brightness = 2
+        Lighting.ClockTime = 14
+        Lighting.FogEnd = 100000
+        Lighting.GlobalShadows = false
+        Lighting.Ambient = Color3.fromRGB(178, 178, 178)
+    end)
+
+    addToggle(playerPage, "🟢 Night Vision Filter", function(active)
+        if active then
+            local cc = Instance.new("ColorCorrectionEffect")
+            cc.Name = "__VretaNightVision"
+            cc.TintColor = Color3.fromRGB(120, 255, 140)
+            cc.Contrast = 0.2
+            cc.Parent = Lighting
+        else
+            local cc = Lighting:FindFirstChild("__VretaNightVision")
+            if cc then cc:Destroy() end
+        end
+    end)
+
+    -- TAB 3: TOGGLES
+    local infJump = false
+    addToggle(togglePage, "🦘 Infinite Jump", function(active) infJump = active end)
+
+    UserInputService.JumpRequest:Connect(function()
+        if infJump then
+            local hum = getHumanoid()
+            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+        end
+    end)
+
+    local noclip = false
+    addToggle(togglePage, "👻 Noclip", function(active) noclip = active end)
+
+    RunService.Stepped:Connect(function()
+        if noclip and player.Character then
+            for _, part in pairs(player.Character:GetDescendants()) do
+                if part:IsA("BasePart") then part.CanCollide = false end
+            end
+        end
+    end)
+
+    addActionButton(togglePage, "🔄 Rejoin Server", function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, player)
+    end)
+
+    -- TAB 4: INFO
+    local infoText = Instance.new("TextLabel")
+    infoText.Size = UDim2.new(1, -6, 0, 70)
+    infoText.BackgroundColor3 = Color3.fromRGB(24, 24, 34)
+    infoText.Text = "⏳ Vreta Hub Waste Time Module\nCustom Royal Purple Engine\nOwned by Vreta Hub V1"
+    infoText.TextColor3 = Color3.fromRGB(200, 200, 220)
+    infoText.Font = Enum.Font.Gotham
+    infoText.TextSize = 10
+    infoText.Parent = infoPage
+
+    local infoCorner = Instance.new("UICorner")
+    infoCorner.CornerRadius = UDim.new(0, 6)
+    infoCorner.Parent = infoText
+
+    addActionButton(infoPage, "📋 Copy Discord Invite", function()
+        setclipboard("https://discord.gg/N4hjynaUTE")
+    end)
+
+    print("⏳ Vreta Purple Waste Time UI Loaded!")
+end)
+
+print("🌙 Vreta Hub V1 Master Active!")
