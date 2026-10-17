@@ -1,4 +1,4 @@
--- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (CRASH-FIXED) 🌙⚡ ]]
+-- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (MODULE 7 SLIMMED) 🌙⚡ ]]
 -- Compatible with Delta, Arceus X, CodeX, and Studio
 
 local Players = game:GetService("Players")
@@ -7,6 +7,7 @@ local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
 local UserInputService = game:GetService("UserInputService")
 local InsertService = game:GetService("InsertService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -242,14 +243,7 @@ btnOthers.Activated:Connect(function()
 end)
 
 local function closeLoader()
-    pcall(function()
-        TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 0, 0, 0),
-            BackgroundTransparency = 1
-        }):Play()
-        task.wait(0.25)
-        loaderGui:Destroy()
-    end)
+    loaderGui:Destroy()
 end
 
 -- ================= NATIVE VRETA SCRIPTS =================
@@ -275,13 +269,14 @@ local tongueEscapeBtn = createVretaGameButton("👅 +1 Tongue Escape")
 local backflipObbyBtn = createVretaGameButton("🤸‍♂️ +1 Backflip Obby Escape")
 local trollTowerBtn = createVretaGameButton("🗼 Troll Tower X")
 local ninjaKeyboardBtn = createVretaGameButton("⌨️ +1 Speed Ninja Keyboard")
+local monkeyEscapeBtn = createVretaGameButton("🐒 +1 Speed Monkey Escape")
 
--- ================= EXTERNAL SCRIPTS (FIXED STRING CONCAT) =================
+-- ================= EXTERNAL SCRIPTS =================
 local function addExternalScriptButton(name, rawUrl)
     local extBtn = Instance.new("TextButton")
     extBtn.Size = UDim2.new(1, -6, 0, 40)
     extBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 46)
-    extBtn.Text = "⚡ " .. name  -- FIXED: used '..' instead of '+'
+    extBtn.Text = "⚡ " .. name
     extBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     extBtn.Font = Enum.Font.GothamMedium
     extBtn.TextSize = 11
@@ -293,9 +288,7 @@ local function addExternalScriptButton(name, rawUrl)
 
     extBtn.Activated:Connect(function()
         closeLoader()
-        pcall(function()
-            loadstring(game:HttpGet(rawUrl))()
-        end)
+        loadstring(game:HttpGet(rawUrl))()
     end)
 end
 
@@ -310,80 +303,111 @@ addExternalScriptButton("Infinite Yield Admin", "https://raw.githubusercontent.c
 -- ========================================================
 mm2Btn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaMM2Gui") then parentGui.VretaMM2Gui:Destroy() end
-        local gui = Instance.new("ScreenGui")
-        gui.Name = "VretaMM2Gui"
-        gui.ResetOnSpawn = false
-        gui.Parent = parentGui
+    if parentGui:FindFirstChild("VretaMM2Gui") then parentGui.VretaMM2Gui:Destroy() end
 
-        local main = Instance.new("Frame")
-        main.Size = UDim2.new(0, 290, 0, 220)
-        main.Position = UDim2.new(0.5, -145, 0.3, -110)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        main.Parent = gui
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaMM2Gui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 290, 0, 260)
+    main.Position = UDim2.new(0.5, -145, 0.3, -130)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 32)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -40, 1, 0)
-        title.Position = UDim2.new(0, 10, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "🔪 MM2 — VRETA HUB ⚡"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 10
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 22, 0, 22)
-        closeBtn.Position = UDim2.new(1, -27, 0, 5)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🔪 MM2 — VRETA HUB ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 10
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -40)
-        container.Position = UDim2.new(0.04, 0, 0, 36)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 2
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 6)
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        local function addBtn(txt, cb)
-            local b = Instance.new("TextButton", container)
-            b.Size = UDim2.new(1, 0, 0, 32)
-            b.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
-            b.Text = txt
-            b.TextColor3 = Color3.fromRGB(255, 255, 255)
-            b.Font = Enum.Font.GothamBold
-            b.TextSize = 10
-            Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
-            b.Activated:Connect(cb)
-        end
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 6)
 
-        addBtn("👁️ ESP Sheriff & Murderer", function()
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 32)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+    end
+
+    local espActive = false
+    addToggle("👁️ Role ESP (Murderer/Sheriff)", function(active)
+        espActive = active
+        task.spawn(function()
+            while espActive do
+                for _, p in ipairs(Players:GetPlayers()) do
+                    if p ~= LocalPlayer and p.Character then
+                        local char = p.Character
+                        local hasKnife = char:FindFirstChild("Knife") or (p.Backpack and p.Backpack:FindFirstChild("Knife"))
+                        local hasGun = char:FindFirstChild("Gun") or char:FindFirstChild("Revolver") or (p.Backpack and (p.Backpack:FindFirstChild("Gun") or p.Backpack:FindFirstChild("Revolver")))
+                        
+                        local hl = char:FindFirstChild("VretaMM2HL")
+                        if not hl then
+                            hl = Instance.new("Highlight")
+                            hl.Name = "VretaMM2HL"
+                            hl.Parent = char
+                        end
+                        
+                        if hasKnife then
+                            hl.FillColor = Color3.fromRGB(255, 0, 0)
+                        elseif hasGun then
+                            hl.FillColor = Color3.fromRGB(0, 150, 255)
+                        else
+                            hl.FillColor = Color3.fromRGB(0, 255, 0)
+                        end
+                    end
+                end
+                task.wait(1)
+            end
             for _, p in ipairs(Players:GetPlayers()) do
-                if p ~= LocalPlayer and p.Character and not p.Character:FindFirstChild("VretaMM2HL") then
-                    local hl = Instance.new("Highlight")
-                    hl.Name = "VretaMM2HL"
-                    hl.Adornee = p.Character
-                    hl.FillColor = Color3.fromRGB(255, 0, 0)
-                    hl.Parent = p.Character
+                if p.Character and p.Character:FindFirstChild("VretaMM2HL") then
+                    p.Character.VretaMM2HL:Destroy()
                 end
             end
         end)
@@ -395,73 +419,92 @@ end)
 -- ========================================================
 wasteTimeBtn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaWasteTimeGui") then parentGui.VretaWasteTimeGui:Destroy() end
-        local gui = Instance.new("ScreenGui", parentGui)
-        gui.Name = "VretaWasteTimeGui"
-        gui.ResetOnSpawn = false
+    if parentGui:FindFirstChild("VretaWasteTimeGui") then parentGui.VretaWasteTimeGui:Destroy() end
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(0, 290, 0, 220)
-        main.Position = UDim2.new(0.5, -145, 0.3, -110)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaWasteTimeGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 32)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 290, 0, 260)
+    main.Position = UDim2.new(0.5, -145, 0.3, -130)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -40, 1, 0)
-        title.Position = UDim2.new(0, 10, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "⏳ WASTE TIME — VRETA HUB ⚡"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 10
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 22, 0, 22)
-        closeBtn.Position = UDim2.new(1, -27, 0, 5)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -40)
-        container.Position = UDim2.new(0.04, 0, 0, 36)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 2
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "⏳ WASTE TIME — VRETA HUB ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 10
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 6)
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local function addBtn(txt, cb)
-            local b = Instance.new("TextButton", container)
-            b.Size = UDim2.new(1, 0, 0, 32)
-            b.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
-            b.Text = txt
-            b.TextColor3 = Color3.fromRGB(255, 255, 255)
-            b.Font = Enum.Font.GothamBold
-            b.TextSize = 10
-            Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
-            b.Activated:Connect(cb)
-        end
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        addBtn("⚡ Auto Farm / Speed Boost", function()
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 6)
+
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 32)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+    end
+
+    local speedActive = false
+    addToggle("⚡ Super WalkSpeed (100)", function(active)
+        speedActive = active
+        task.spawn(function()
+            while speedActive do
+                local char = LocalPlayer.Character
+                local hum = char and char:FindFirstChildOfClass("Humanoid")
+                if hum then hum.WalkSpeed = 100 end
+                task.wait(0.5)
+            end
             local char = LocalPlayer.Character
             local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum then hum.WalkSpeed = 100 end
+            if hum then hum.WalkSpeed = 16 end
         end)
     end)
 end)
@@ -471,144 +514,145 @@ end)
 -- ========================================================
 tongueEscapeBtn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaTongueGui") then parentGui.VretaTongueGui:Destroy() end
+    if parentGui:FindFirstChild("VretaTongueGui") then parentGui.VretaTongueGui:Destroy() end
 
-        local gui = Instance.new("ScreenGui", parentGui)
-        gui.Name = "VretaTongueGui"
-        gui.ResetOnSpawn = false
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaTongueGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(0, 360, 0, 260)
-        main.Position = UDim2.new(0.5, -180, 0.35, -130)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 360, 0, 260)
+    main.Position = UDim2.new(0.5, -180, 0.35, -130)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 38)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 12)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -50, 1, 0)
-        title.Position = UDim2.new(0, 12, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "👅 VRETA HUB — +1 TONGUE ESCAPE"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 12
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 38)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 12)
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 26, 0, 26)
-        closeBtn.Position = UDim2.new(1, -32, 0, 6)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -50, 1, 0)
+    title.Position = UDim2.new(0, 12, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "👅 VRETA HUB — +1 TONGUE ESCAPE"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 12
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -50)
-        container.Position = UDim2.new(0.04, 0, 0, 44)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 3
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 26, 0, 26)
+    closeBtn.Position = UDim2.new(1, -32, 0, 6)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 8)
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -50)
+    container.Position = UDim2.new(0.04, 0, 0, 44)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 3
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        local function addToggle(text, callback)
-            local state = false
-            local btn = Instance.new("TextButton", container)
-            btn.Size = UDim2.new(1, 0, 0, 36)
-            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-            btn.Text = text .. ": OFF 🔴"
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.GothamMedium
-            btn.TextSize = 10
-            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 8)
 
-            btn.Activated:Connect(function()
-                state = not state
-                btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
-                btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
-                callback(state)
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 36)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 10
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+    end
+
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
+
+    local function triggerJump()
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
+
+    local treadmillActive = false
+    addToggle("⚡ 6x Treadmill", function(active)
+        treadmillActive = active
+        if active then
+            local root = getRoot()
+            if root then root.CFrame = CFrame.new(3189.3, 851.6, -563.5) end
+            triggerJump()
+            task.spawn(function()
+                while treadmillActive do
+                    local currentRoot = getRoot()
+                    if currentRoot then currentRoot.CFrame = CFrame.new(3189.3, 851.6, -563.5) end
+                    task.wait(0.05)
+                end
+            end)
+        else
+            triggerJump()
+        end
+    end)
+
+    local winsActive = false
+    addToggle("🏆 8K Wins", function(active)
+        winsActive = active
+        if active then
+            task.spawn(function()
+                local toggleState = false
+                while winsActive do
+                    local root = getRoot()
+                    if root then
+                        local targetPos = toggleState and Vector3.new(-13196, 506, -559) or Vector3.new(-13190, 506, -559)
+                        root.CFrame = CFrame.new(targetPos)
+                        toggleState = not toggleState
+                    end
+                    task.wait(300 / 10000)
+                end
             end)
         end
+    end)
 
-        local function getRoot()
-            local char = LocalPlayer.Character
-            return char and char:FindFirstChild("HumanoidRootPart")
+    local tongueActive = false
+    addToggle("👅 Auto Tongue Walk", function(active)
+        tongueActive = active
+        if active then
+            task.spawn(function()
+                local step = false
+                while tongueActive do
+                    local root = getRoot()
+                    if root then
+                        local targetPos = step and Vector3.new(2889.3, 851.6, -563.5) or Vector3.new(2890.3, 851.6, -563.5)
+                        root.CFrame = CFrame.new(targetPos)
+                        step = not step
+                    end
+                    task.wait(0.1)
+                end
+            end)
         end
-
-        local function triggerJump()
-            local char = LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-        end
-
-        local treadmillActive = false
-        addToggle("⚡ 6x Treadmill", function(active)
-            treadmillActive = active
-            if active then
-                local root = getRoot()
-                if root then root.CFrame = CFrame.new(3189.3, 851.6, -563.5) end
-                triggerJump()
-                task.spawn(function()
-                    while treadmillActive do
-                        local currentRoot = getRoot()
-                        if currentRoot then currentRoot.CFrame = CFrame.new(3189.3, 851.6, -563.5) end
-                        task.wait(0.05)
-                    end
-                end)
-            else
-                triggerJump()
-            end
-        end)
-
-        local winsActive = false
-        addToggle("🏆 8K Wins", function(active)
-            winsActive = active
-            if active then
-                task.spawn(function()
-                    local toggleState = false
-                    while winsActive do
-                        local root = getRoot()
-                        if root then
-                            local targetPos = toggleState and Vector3.new(-13196, 506, -559) or Vector3.new(-13190, 506, -559)
-                            root.CFrame = CFrame.new(targetPos)
-                            toggleState = not toggleState
-                        end
-                        task.wait(300 / 10000)
-                    end
-                end)
-            end
-        end)
-
-        local tongueActive = false
-        addToggle("👅 Auto Tongue Walk", function(active)
-            tongueActive = active
-            if active then
-                task.spawn(function()
-                    local step = false
-                    while tongueActive do
-                        local root = getRoot()
-                        if root then
-                            local targetPos = step and Vector3.new(2889.3, 851.6, -563.5) or Vector3.new(2890.3, 851.6, -563.5)
-                            root.CFrame = CFrame.new(targetPos)
-                            step = not step
-                        end
-                        task.wait(0.1)
-                    end
-                end)
-            end
-        end)
     end)
 end)
 
@@ -617,150 +661,151 @@ end)
 -- ========================================================
 backflipObbyBtn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaBackflipGui") then parentGui.VretaBackflipGui:Destroy() end
+    if parentGui:FindFirstChild("VretaBackflipGui") then parentGui.VretaBackflipGui:Destroy() end
 
-        local gui = Instance.new("ScreenGui", parentGui)
-        gui.Name = "VretaBackflipGui"
-        gui.ResetOnSpawn = false
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaBackflipGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(0, 290, 0, 240)
-        main.Position = UDim2.new(0.5, -145, 0.35, -120)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 290, 0, 240)
+    main.Position = UDim2.new(0.5, -145, 0.35, -120)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 32)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -40, 1, 0)
-        title.Position = UDim2.new(0, 10, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "🤸‍♂️ +1 BACKFLIP OBBY ESCAPE ⚡"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 10
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 22, 0, 22)
-        closeBtn.Position = UDim2.new(1, -27, 0, 5)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🤸‍♂️ +1 BACKFLIP OBBY ESCAPE ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 10
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -40)
-        container.Position = UDim2.new(0.04, 0, 0, 36)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 2
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 5)
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        local function addToggle(text, callback)
-            local state = false
-            local btn = Instance.new("TextButton", container)
-            btn.Size = UDim2.new(1, 0, 0, 30)
-            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-            btn.Text = text .. ": OFF 🔴"
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.GothamMedium
-            btn.TextSize = 9
-            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 5)
 
-            btn.Activated:Connect(function()
-                state = not state
-                btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
-                btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
-                callback(state)
-            end)
-            return btn
-        end
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
-        local function getRoot()
-            local char = LocalPlayer.Character
-            return char and char:FindFirstChild("HumanoidRootPart")
-        end
-
-        local function triggerJump()
-            local char = LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-        end
-
-        local winsActive = false
-        addToggle("🏆 5K Wins (300 Speed Slide)", function(active)
-            winsActive = active
-            if active then
-                task.spawn(function()
-                    local toggleState = false
-                    while winsActive do
-                        local root = getRoot()
-                        if root then
-                            local targetPos = toggleState and Vector3.new(21178.0, 62.6, -772.0) or Vector3.new(21174.0, 62.6, -772.0)
-                            root.CFrame = CFrame.new(targetPos)
-                            toggleState = not toggleState
-                        end
-                        task.wait(300 / 10000)
-                    end
-                end)
-            end
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
         end)
+        return btn
+    end
 
-        local farmSpeedActive = false
-        addToggle("⚡ Farm Speed", function(active)
-            farmSpeedActive = active
-            if active then
-                task.spawn(function()
-                    local step = false
-                    while farmSpeedActive do
-                        local root = getRoot()
-                        if root then
-                            local targetPos = step and Vector3.new(828.9, 63.6, -758.4) or Vector3.new(832.4, 63.6, -673.4)
-                            root.CFrame = CFrame.new(targetPos)
-                            step = not step
-                        end
-                        task.wait(0.1)
-                    end
-                end)
-            end
-        end)
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
 
-        local function addTreadmill(name, pos)
-            local state = false
-            addToggle(name, function(active)
-                state = active
-                if active then
+    local function triggerJump()
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
+
+    local winsActive = false
+    addToggle("🏆 5K Wins (300 Speed Slide)", function(active)
+        winsActive = active
+        if active then
+            task.spawn(function()
+                local toggleState = false
+                while winsActive do
                     local root = getRoot()
-                    if root then root.CFrame = CFrame.new(pos) end
-                    triggerJump()
-                    task.spawn(function()
-                        while state do
-                            local r = getRoot()
-                            if r then r.CFrame = CFrame.new(pos) end
-                            task.wait(0.05)
-                        end
-                    end)
+                    if root then
+                        local targetPos = toggleState and Vector3.new(21178.0, 62.6, -772.0) or Vector3.new(21174.0, 62.6, -772.0)
+                        root.CFrame = CFrame.new(targetPos)
+                        toggleState = not toggleState
+                    end
+                    task.wait(300 / 10000)
                 end
             end)
         end
-
-        addTreadmill("🏃‍♂️ 2x Treadmill", Vector3.new(788.2, 64.9, -699.5))
-        addTreadmill("🏃‍♂️ 1.5x Treadmill", Vector3.new(787.8, 64.9, -688.7))
-        addTreadmill("🏃‍♂️ 1x Treadmill", Vector3.new(788.8, 64.9, -678.2))
     end)
+
+    local farmSpeedActive = false
+    addToggle("⚡ Farm Speed", function(active)
+        farmSpeedActive = active
+        if active then
+            task.spawn(function()
+                local step = false
+                while farmSpeedActive do
+                    local root = getRoot()
+                    if root then
+                        local targetPos = step and Vector3.new(828.9, 63.6, -758.4) or Vector3.new(832.4, 63.6, -673.4)
+                        root.CFrame = CFrame.new(targetPos)
+                        step = not step
+                    end
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end)
+
+    local function addTreadmill(name, pos)
+        local state = false
+        addToggle(name, function(active)
+            state = active
+            if active then
+                local root = getRoot()
+                if root then root.CFrame = CFrame.new(pos) end
+                triggerJump()
+                task.spawn(function()
+                    while state do
+                        local r = getRoot()
+                        if r then r.CFrame = CFrame.new(pos) end
+                        task.wait(0.05)
+                    end
+                end)
+            end
+        end)
+    end
+
+    addTreadmill("🏃‍♂️ 2x Treadmill", Vector3.new(788.2, 64.9, -699.5))
+    addTreadmill("🏃‍♂️ 1.5x Treadmill", Vector3.new(787.8, 64.9, -688.7))
+    addTreadmill("🏃‍♂️ 1x Treadmill", Vector3.new(788.8, 64.9, -678.2))
 end)
 
 -- ========================================================
@@ -768,298 +813,299 @@ end)
 -- ========================================================
 trollTowerBtn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaTrollTowerGui") then parentGui.VretaTrollTowerGui:Destroy() end
+    if parentGui:FindFirstChild("VretaTrollTowerGui") then parentGui.VretaTrollTowerGui:Destroy() end
 
-        local gui = Instance.new("ScreenGui", parentGui)
-        gui.Name = "VretaTrollTowerGui"
-        gui.ResetOnSpawn = false
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaTrollTowerGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(0, 310, 0, 350)
-        main.Position = UDim2.new(0.5, -155, 0.3, -175)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 310, 0, 350)
+    main.Position = UDim2.new(0.5, -155, 0.3, -175)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 32)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -40, 1, 0)
-        title.Position = UDim2.new(0, 10, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "🗼 TROLL TOWER X — VRETA ⚡"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 10
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 22, 0, 22)
-        closeBtn.Position = UDim2.new(1, -27, 0, 5)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🗼 TROLL TOWER X — VRETA ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 10
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -40)
-        container.Position = UDim2.new(0.04, 0, 0, 36)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 2
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 6)
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        local function getRoot()
-            local char = LocalPlayer.Character
-            return char and char:FindFirstChild("HumanoidRootPart")
-        end
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 6)
 
-        local function getHumanoid()
-            local char = LocalPlayer.Character
-            return char and char:FindFirstChildOfClass("Humanoid")
-        end
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
 
-        local function addNotification(msg)
-            local notif = Instance.new("TextLabel", container)
-            notif.Size = UDim2.new(1, 0, 0, 28)
-            notif.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
-            notif.TextColor3 = Color3.fromRGB(255, 255, 255)
-            notif.Text = "⚠️ " .. msg
-            notif.Font = Enum.Font.GothamBold
-            notif.TextSize = 9
-            Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 6)
-            task.delay(2.5, function() if notif then notif:Destroy() end end)
-        end
+    local function getHumanoid()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChildOfClass("Humanoid")
+    end
 
-        local function addButton(text, callback)
-            local btn = Instance.new("TextButton", container)
-            btn.Size = UDim2.new(1, 0, 0, 32)
-            btn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
-            btn.Text = text
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.GothamBold
-            btn.TextSize = 10
-            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-            btn.Activated:Connect(callback)
-            return btn
-        end
+    local function addNotification(msg)
+        local notif = Instance.new("TextLabel", container)
+        notif.Size = UDim2.new(1, 0, 0, 28)
+        notif.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        notif.TextColor3 = Color3.fromRGB(255, 255, 255)
+        notif.Text = "⚠️ " .. msg
+        notif.Font = Enum.Font.GothamBold
+        notif.TextSize = 9
+        Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 6)
+        task.delay(2.5, function() if notif then notif:Destroy() end end)
+    end
 
-        local function addToggle(text, callback)
-            local state = false
-            local btn = Instance.new("TextButton", container)
-            btn.Size = UDim2.new(1, 0, 0, 32)
-            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-            btn.Text = text .. ": OFF 🔴"
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.GothamMedium
-            btn.TextSize = 9
-            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    local function addButton(text, callback)
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 32)
+        btn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        btn.Text = text
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 10
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        btn.Activated:Connect(callback)
+        return btn
+    end
 
-            btn.Activated:Connect(function()
-                state = not state
-                btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
-                btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
-                callback(state)
-            end)
-            return btn
-        end
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 32)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 
-        local function addTextBox(placeholder, callback)
-            local box = Instance.new("TextBox", container)
-            box.Size = UDim2.new(1, 0, 0, 32)
-            box.BackgroundColor3 = Color3.fromRGB(36, 36, 50)
-            box.PlaceholderText = placeholder
-            box.Text = ""
-            box.TextColor3 = Color3.fromRGB(255, 255, 255)
-            box.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
-            box.Font = Enum.Font.GothamMedium
-            box.TextSize = 9
-            Instance.new("UICorner", box).CornerRadius = UDim.new(0, 6)
-
-            box.FocusLost:Connect(function(enterPressed)
-                if enterPressed then callback(box.Text) end
-            end)
-            return box
-        end
-
-        addButton("🏆 Complete Tower (Instant Win)", function()
-            local root = getRoot()
-            if root then
-                root.CFrame = CFrame.new(-13.9, 343.1, -173.8)
-                addNotification("Teleported to Tower Completion!")
-            end
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
         end)
+        return btn
+    end
 
-        addTextBox("⚡ Set WalkSpeed", function(text)
-            local val = tonumber(text)
-            local hum = getHumanoid()
-            if val and hum then hum.WalkSpeed = val addNotification("WalkSpeed: " .. val) end
+    local function addTextBox(placeholder, callback)
+        local box = Instance.new("TextBox", container)
+        box.Size = UDim2.new(1, 0, 0, 32)
+        box.BackgroundColor3 = Color3.fromRGB(36, 36, 50)
+        box.PlaceholderText = placeholder
+        box.Text = ""
+        box.TextColor3 = Color3.fromRGB(255, 255, 255)
+        box.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
+        box.Font = Enum.Font.GothamMedium
+        box.TextSize = 9
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0, 6)
+
+        box.FocusLost:Connect(function(enterPressed)
+            if enterPressed then callback(box.Text) end
         end)
+        return box
+    end
 
-        addTextBox("🦘 Set JumpPower", function(text)
-            local val = tonumber(text)
-            local hum = getHumanoid()
-            if val and hum then hum.UseJumpPower = true hum.JumpPower = val addNotification("JumpPower: " .. val) end
-        end)
+    addButton("🏆 Complete Tower (Instant Win)", function()
+        local root = getRoot()
+        if root then
+            root.CFrame = CFrame.new(-13.9, 343.1, -173.8)
+            addNotification("Teleported to Tower Completion!")
+        end
+    end)
 
-        local flySpeedVal = 50
-        addTextBox("✈️ Fly Speed (Default 50)", function(text)
-            local val = tonumber(text)
-            if val then flySpeedVal = val addNotification("Fly Speed set to: " .. val) end
-        end)
+    addTextBox("⚡ Set WalkSpeed", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then hum.WalkSpeed = val addNotification("WalkSpeed: " .. val) end
+    end)
 
-        local flying = false
-        addToggle("✈️ Enable Fly", function(active)
-            flying = active
-            if flying then
-                task.spawn(function()
-                    local bg = Instance.new("BodyGyro")
-                    local bv = Instance.new("BodyVelocity")
-                    bg.P = 9e4
-                    bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
-                    bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
-                    while flying do
-                        local root = getRoot()
-                        local camera = workspace.CurrentCamera
-                        if root and camera then
-                            if not bg.Parent then bg.Parent = root end
-                            if not bv.Parent then bv.Parent = root end
-                            bg.CFrame = camera.CFrame
-                            bv.Velocity = camera.CFrame.LookVector * flySpeedVal
-                        else
-                            if bg.Parent then bg:Destroy() end
-                            if bv.Parent then bv:Destroy() end
-                        end
-                        RunService.RenderStepped:Wait()
+    addTextBox("🦘 Set JumpPower", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then hum.UseJumpPower = true hum.JumpPower = val addNotification("JumpPower: " .. val) end
+    end)
+
+    local flySpeedVal = 50
+    addTextBox("✈️ Fly Speed (Default 50)", function(text)
+        local val = tonumber(text)
+        if val then flySpeedVal = val addNotification("Fly Speed set to: " .. val) end
+    end)
+
+    local flying = false
+    addToggle("✈️ Enable Fly", function(active)
+        flying = active
+        if flying then
+            task.spawn(function()
+                local bg = Instance.new("BodyGyro")
+                local bv = Instance.new("BodyVelocity")
+                bg.P = 9e4
+                bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
+                bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
+                while flying do
+                    local root = getRoot()
+                    local camera = workspace.CurrentCamera
+                    if root and camera then
+                        if not bg.Parent then bg.Parent = root end
+                        if not bv.Parent then bv.Parent = root end
+                        bg.CFrame = camera.CFrame
+                        bv.Velocity = camera.CFrame.LookVector * flySpeedVal
+                    else
+                        if bg.Parent then bg:Destroy() end
+                        if bv.Parent then bv:Destroy() end
                     end
-                    if bg.Parent then bg:Destroy() end
-                    if bv.Parent then bv:Destroy() end
-                end)
+                    RunService.RenderStepped:Wait()
+                end
+                if bg.Parent then bg:Destroy() end
+                if bv.Parent then bv:Destroy() end
+            end)
+        end
+    end)
+
+    local infJumpActive = false
+    local limit2Active = false
+    addToggle("🚀 Infinite Jump", function(active) infJumpActive = active end)
+    addToggle("🔒 Limit Infinite Jump 2", function(active)
+        if active and not infJumpActive then
+            addNotification("Please Enable Infinite Jump First!")
+            return
+        end
+        limit2Active = active
+    end)
+
+    local jumpCounter = 0
+    UserInputService.JumpRequest:Connect(function()
+        if infJumpActive then
+            local hum = getHumanoid()
+            if hum then
+                if limit2Active then
+                    if jumpCounter < 2 then
+                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                        jumpCounter = jumpCounter + 1
+                    end
+                else
+                    hum:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+        end
+    end)
+
+    RunService.Heartbeat:Connect(function()
+        local hum = getHumanoid()
+        if hum and hum.FloorMaterial ~= Enum.Material.Air then jumpCounter = 0 end
+    end)
+
+    addToggle("🐰 Bunny Hop", function(active)
+        task.spawn(function()
+            while active do
+                local hum = getHumanoid()
+                if hum and hum.FloorMaterial ~= Enum.Material.Air then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+                task.wait(0.1)
             end
         end)
+    end)
 
-        local infJumpActive = false
-        local limit2Active = false
-        addToggle("🚀 Infinite Jump", function(active) infJumpActive = active end)
-        addToggle("🔒 Limit Infinite Jump 2", function(active)
-            if active and not infJumpActive then
-                addNotification("Please Enable Infinite Jump First!")
-                return
+    addToggle("🛡️ Anti-Fling", function(active)
+        task.spawn(function()
+            while active do
+                local root = getRoot()
+                if root then
+                    root.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+                    root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z)
+                end
+                RunService.Heartbeat:Wait()
             end
-            limit2Active = active
         end)
+    end)
 
-        local jumpCounter = 0
-        UserInputService.JumpRequest:Connect(function()
-            if infJumpActive then
+    addToggle("🛡️ Anti-Ragdoll", function(active)
+        task.spawn(function()
+            while active do
                 local hum = getHumanoid()
                 if hum then
-                    if limit2Active then
-                        if jumpCounter < 2 then
-                            hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                            jumpCounter = jumpCounter + 1
-                        end
-                    else
-                        hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
+                    hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+                    hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
                 end
+                task.wait(0.5)
             end
         end)
+    end)
 
-        RunService.Heartbeat:Connect(function()
-            local hum = getHumanoid()
-            if hum and hum.FloorMaterial ~= Enum.Material.Air then jumpCounter = 0 end
-        end)
-
-        addToggle("🐰 Bunny Hop", function(active)
-            task.spawn(function()
-                while active do
-                    local hum = getHumanoid()
-                    if hum and hum.FloorMaterial ~= Enum.Material.Air then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-                    task.wait(0.1)
-                end
-            end)
-        end)
-
-        addToggle("🛡️ Anti-Fling", function(active)
-            task.spawn(function()
-                while active do
-                    local root = getRoot()
-                    if root then
-                        root.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
-                        root.AssemblyLinearVelocity = Vector3.new(root.AssemblyLinearVelocity.X, 0, root.AssemblyLinearVelocity.Z)
+    addToggle("🛡️ Anti-Slip", function(active)
+        task.spawn(function()
+            while active do
+                local char = LocalPlayer.Character
+                if char then
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then part.CustomPhysicalProperties = PhysicalProperties.new(1.0, 0, 0, 1.0, 1.0) end
                     end
-                    RunService.Heartbeat:Wait()
                 end
-            end)
-        end)
-
-        addToggle("🛡️ Anti-Ragdoll", function(active)
-            task.spawn(function()
-                while active do
-                    local hum = getHumanoid()
-                    if hum then
-                        hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-                        hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
-                    end
-                    task.wait(0.5)
-                end
-            end)
-        end)
-
-        addToggle("🛡️ Anti-Slip", function(active)
-            task.spawn(function()
-                while active do
-                    local char = LocalPlayer.Character
-                    if char then
-                        for _, part in ipairs(char:GetDescendants()) do
-                            if part:IsA("BasePart") then part.CustomPhysicalProperties = PhysicalProperties.new(1.0, 0, 0, 1.0, 1.0) end
-                        end
-                    end
-                    task.wait(1)
-                end
-            end)
-        end)
-
-        addToggle("🛡️ Anti-Sit", function(active)
-            task.spawn(function()
-                while active do
-                    local hum = getHumanoid()
-                    if hum then hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end
-                    task.wait(0.5)
-                end
-            end)
-        end)
-
-        addButton("🎁 Give All Items", function()
-            for _, obj in ipairs(workspace:GetDescendants()) do
-                if obj:IsA("Tool") then
-                    local clone = obj:Clone()
-                    clone.Parent = LocalPlayer.Backpack
-                end
+                task.wait(1)
             end
-            addNotification("All items cloned!")
         end)
+    end)
 
-        addButton("👑 Load Kohl's Admin (172732271)", function()
-            pcall(function()
-                local model = InsertService:LoadAsset(172732271)
-                if model then
-                    for _, child in ipairs(model:GetChildren()) do child.Parent = workspace end
-                    addNotification("Kohl's Admin Loaded!")
-                end
-            end)
+    addToggle("🛡️ Anti-Sit", function(active)
+        task.spawn(function()
+            while active do
+                local hum = getHumanoid()
+                if hum then hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false) end
+                task.wait(0.5)
+            end
+        end)
+    end)
+
+    addButton("🎁 Give All Items", function()
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Tool") then
+                local clone = obj:Clone()
+                clone.Parent = LocalPlayer.Backpack
+            end
+        end
+        addNotification("All items cloned!")
+    end)
+
+    addButton("👑 Load Kohl's Admin (172732271)", function()
+        pcall(function()
+            local model = InsertService:LoadAsset(172732271)
+            if model then
+                for _, child in ipairs(model:GetChildren()) do child.Parent = workspace end
+                addNotification("Kohl's Admin Loaded!")
+            end
         end)
     end)
 end)
@@ -1069,146 +1115,285 @@ end)
 -- ========================================================
 ninjaKeyboardBtn.Activated:Connect(function()
     closeLoader()
-    pcall(function()
-        if parentGui:FindFirstChild("VretaNinjaKeyboardGui") then parentGui.VretaNinjaKeyboardGui:Destroy() end
+    if parentGui:FindFirstChild("VretaNinjaKeyboardGui") then parentGui.VretaNinjaKeyboardGui:Destroy() end
 
-        local gui = Instance.new("ScreenGui", parentGui)
-        gui.Name = "VretaNinjaKeyboardGui"
-        gui.ResetOnSpawn = false
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaNinjaKeyboardGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
 
-        local main = Instance.new("Frame", gui)
-        main.Size = UDim2.new(0, 290, 0, 280)
-        main.Position = UDim2.new(0.5, -145, 0.3, -140)
-        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
-        main.Active = true
-        main.Draggable = true
-        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
-        local stroke = Instance.new("UIStroke", main)
-        stroke.Color = Color3.fromRGB(175, 115, 255)
-        stroke.Thickness = 1.5
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 290, 0, 280)
+    main.Position = UDim2.new(0.5, -145, 0.3, -140)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
 
-        local topBar = Instance.new("Frame", main)
-        topBar.Size = UDim2.new(1, 0, 0, 32)
-        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
-        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
 
-        local title = Instance.new("TextLabel", topBar)
-        title.Size = UDim2.new(1, -40, 1, 0)
-        title.Position = UDim2.new(0, 10, 0, 0)
-        title.BackgroundTransparency = 1
-        title.Text = "⌨️ +1 NINJA KEYBOARD ESCAPE ⚡"
-        title.TextColor3 = Color3.fromRGB(200, 150, 255)
-        title.TextSize = 9
-        title.Font = Enum.Font.GothamBold
-        title.TextXAlignment = Enum.TextXAlignment.Left
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
 
-        local closeBtn = Instance.new("TextButton", topBar)
-        closeBtn.Size = UDim2.new(0, 22, 0, 22)
-        closeBtn.Position = UDim2.new(1, -27, 0, 5)
-        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
-        closeBtn.Text = "×"
-        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        closeBtn.Font = Enum.Font.GothamBold
-        closeBtn.Activated:Connect(function() gui:Destroy() end)
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "⌨️ +1 NINJA KEYBOARD ESCAPE ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 9
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
 
-        local container = Instance.new("ScrollingFrame", main)
-        container.Size = UDim2.new(0.92, 0, 1, -40)
-        container.Position = UDim2.new(0.04, 0, 0, 36)
-        container.BackgroundTransparency = 1
-        container.ScrollBarThickness = 2
-        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
 
-        local layout = Instance.new("UIListLayout", container)
-        layout.Padding = UDim.new(0, 5)
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
-        local function getRoot()
-            local char = LocalPlayer.Character
-            return char and char:FindFirstChild("HumanoidRootPart")
-        end
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 5)
 
-        local function triggerJump()
-            local char = LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-        end
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
 
-        local function addToggle(text, callback)
-            local state = false
-            local btn = Instance.new("TextButton", container)
-            btn.Size = UDim2.new(1, 0, 0, 30)
-            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
-            btn.Text = text .. ": OFF 🔴"
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.GothamMedium
-            btn.TextSize = 9
-            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+    local function triggerJump()
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
 
-            btn.Activated:Connect(function()
-                state = not state
-                btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
-                btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
-                callback(state)
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+        return btn
+    end
+
+    local winsActive = false
+    addToggle("🏆 Wins (Drop Loop)", function(active)
+        winsActive = active
+        if active then
+            task.spawn(function()
+                while winsActive do
+                    local root = getRoot()
+                    if root then root.CFrame = CFrame.new(1.0, 37.0, -10262.4) end
+                    task.wait(0.3)
+                end
             end)
-            return btn
         end
+    end)
 
-        local winsActive = false
-        addToggle("🏆 Wins (Drop Loop)", function(active)
-            winsActive = active
+    local function addTreadmillToggle(name, targetPos)
+        local activeState = false
+        addToggle(name, function(active)
+            activeState = active
+            if active then
+                local root = getRoot()
+                if root then root.CFrame = CFrame.new(targetPos) end
+                triggerJump()
+                task.spawn(function()
+                    while activeState do
+                        local currentRoot = getRoot()
+                        if currentRoot then currentRoot.CFrame = CFrame.new(targetPos) end
+                        task.wait(0.05)
+                    end
+                end)
+            end
+        end)
+    end
+
+    addTreadmillToggle("⚡ 100x Treadmill", Vector3.new(-69.6, 14.6, -21.9))
+    addTreadmillToggle("⚡ 50x Treadmill", Vector3.new(-69.6, 11.8, -0.4))
+    addTreadmillToggle("⚡ 25x Treadmill", Vector3.new(-69.6, 10.8, 21.7))
+    addTreadmillToggle("⚡ 5x Treadmill", Vector3.new(-69.6, 9.9, 42.3))
+    addTreadmillToggle("⚡ 2x Treadmill", Vector3.new(-69.6, 9.5, 61.8))
+
+    local autoRebirthActive = false
+    addToggle("🔄 Auto Rebirth", function(active)
+        autoRebirthActive = active
+        if active then
+            task.spawn(function()
+                while autoRebirthActive do
+                    pcall(function()
+                        local remotes = ReplicatedStorage:FindFirstChild("Remotes", true) or ReplicatedStorage
+                        for _, remote in ipairs(remotes:GetDescendants()) do
+                            if remote:IsA("RemoteEvent") and (remote.Name:lower():find("rebirth") or remote.Name:lower():find("reborn")) then
+                                remote:FireServer()
+                            end
+                        end
+                    end)
+                    task.wait(1)
+                end
+            end)
+        end
+    end)
+end)
+
+-- ========================================================
+-- NATIVE MODULE 7: +1 SPEED MONKEY ESCAPE (SLIM UI)
+-- ========================================================
+monkeyEscapeBtn.Activated:Connect(function()
+    closeLoader()
+    if parentGui:FindFirstChild("VretaMonkeyGui") then parentGui.VretaMonkeyGui:Destroy() end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaMonkeyGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
+
+    -- Slimmer, more compact mobile UI size
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 290, 0, 240)
+    main.Position = UDim2.new(0.5, -145, 0.35, -120)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
+
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
+
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 32)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 10)
+
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -40, 1, 0)
+    title.Position = UDim2.new(0, 10, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🐒 +1 SPEED MONKEY ESCAPE ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 9
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 22, 0, 22)
+    closeBtn.Position = UDim2.new(1, -27, 0, 5)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
+
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -40)
+    container.Position = UDim2.new(0.04, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 5)
+
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
+
+    local function triggerJump()
+        local char = LocalPlayer.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+    end
+
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+        return btn
+    end
+
+    -- W1, W2, W3 Wins Drop Loops
+    local function addWinsLoop(name, targetPos)
+        local activeState = false
+        addToggle(name, function(active)
+            activeState = active
             if active then
                 task.spawn(function()
-                    while winsActive do
+                    while activeState do
                         local root = getRoot()
-                        if root then root.CFrame = CFrame.new(1.0, 37.0, -10262.4) end
+                        if root then root.CFrame = CFrame.new(targetPos) end
                         task.wait(0.3)
                     end
                 end)
             end
         end)
+    end
 
-        local function addTreadmillToggle(name, targetPos)
-            local activeState = false
-            addToggle(name, function(active)
-                activeState = active
-                if active then
-                    local root = getRoot()
-                    if root then root.CFrame = CFrame.new(targetPos) end
-                    triggerJump()
-                    task.spawn(function()
-                        while activeState do
-                            local currentRoot = getRoot()
-                            if currentRoot then currentRoot.CFrame = CFrame.new(targetPos) end
-                            task.wait(0.05)
-                        end
-                    end)
-                end
-            end)
-        end
+    addWinsLoop("🏆 W1 Wins", Vector3.new(-9459, 390, -253))
+    addWinsLoop("🏆 W2 Wins", Vector3.new(-3608, 154, -9380))
+    addWinsLoop("🏆 W3 Wins", Vector3.new(-8079, 282, 2743))
 
-        addTreadmillToggle("⚡ 100x Treadmill", Vector3.new(-69.6, 14.6, -21.9))
-        addTreadmillToggle("⚡ 50x Treadmill", Vector3.new(-69.6, 11.8, -0.4))
-        addTreadmillToggle("⚡ 25x Treadmill", Vector3.new(-69.6, 10.8, 21.7))
-        addTreadmillToggle("⚡ 5x Treadmill", Vector3.new(-69.6, 9.9, 42.3))
-        addTreadmillToggle("⚡ 2x Treadmill", Vector3.new(-69.6, 9.5, 61.8))
-
-        local autoRebirthActive = false
-        addToggle("🔄 Auto Rebirth", function(active)
-            autoRebirthActive = active
+    -- Treadmills
+    local function addTreadmillToggle(name, targetPos)
+        local activeState = false
+        addToggle(name, function(active)
+            activeState = active
             if active then
+                local root = getRoot()
+                if root then root.CFrame = CFrame.new(targetPos) end
+                triggerJump()
                 task.spawn(function()
-                    while autoRebirthActive do
-                        pcall(function()
-                            local remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes", true) or game:GetService("ReplicatedStorage")
-                            for _, remote in ipairs(remotes:GetDescendants()) do
-                                if remote:IsA("RemoteEvent") and (remote.Name:lower():find("rebirth") or remote.Name:lower():find("reborn")) then
-                                    remote:FireServer()
-                                end
-                            end
-                        end)
-                        task.wait(1)
+                    while activeState do
+                        local currentRoot = getRoot()
+                        if currentRoot then currentRoot.CFrame = CFrame.new(targetPos) end
+                        task.wait(0.05)
                     end
                 end)
             end
         end)
-    end)
+    end
+
+    addTreadmillToggle("🏃‍♂️ 1.5x Treadmill", Vector3.new(-453, 26, 2701))
+    addTreadmillToggle("🏃‍♂️ 1x Treadmill", Vector3.new(-441, 26, 2701))
+
+    print("🐒 Vreta Hub — Slim +1 Speed Monkey Escape Loaded!")
 end)
