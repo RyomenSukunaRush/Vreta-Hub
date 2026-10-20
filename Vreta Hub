@@ -1,4 +1,4 @@
--- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (MODULE 7 SLIMMED) 🌙⚡ ]]
+-- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (MODULE 8 ADDED) 🌙⚡ ]]
 -- Compatible with Delta, Arceus X, CodeX, and Studio
 
 local Players = game:GetService("Players")
@@ -8,6 +8,7 @@ local Lighting = game:GetService("Lighting")
 local UserInputService = game:GetService("UserInputService")
 local InsertService = game:GetService("InsertService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TeleportService = game:GetService("TeleportService")
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -270,6 +271,7 @@ local backflipObbyBtn = createVretaGameButton("🤸‍♂️ +1 Backflip Obby Es
 local trollTowerBtn = createVretaGameButton("🗼 Troll Tower X")
 local ninjaKeyboardBtn = createVretaGameButton("⌨️ +1 Speed Ninja Keyboard")
 local monkeyEscapeBtn = createVretaGameButton("🐒 +1 Speed Monkey Escape")
+local brainrotsFlyBtn = createVretaGameButton("🧠 +1 Fly For Brainrots")
 
 -- ================= EXTERNAL SCRIPTS =================
 local function addExternalScriptButton(name, rawUrl)
@@ -427,8 +429,8 @@ wasteTimeBtn.Activated:Connect(function()
     gui.Parent = parentGui
 
     local main = Instance.new("Frame")
-    main.Size = UDim2.new(0, 290, 0, 260)
-    main.Position = UDim2.new(0.5, -145, 0.3, -130)
+    main.Size = UDim2.new(0, 310, 0, 340)
+    main.Position = UDim2.new(0.5, -155, 0.3, -170)
     main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
     main.Active = true
     main.Draggable = true
@@ -469,14 +471,38 @@ wasteTimeBtn.Activated:Connect(function()
     container.BackgroundTransparency = 1
     container.ScrollBarThickness = 2
     container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    container.Parent = main
 
     local layout = Instance.new("UIListLayout", container)
-    layout.Padding = UDim.new(0, 6)
+    layout.Padding = UDim.new(0, 5)
+
+    local function getRoot()
+        local c = LocalPlayer.Character
+        return c and c:FindFirstChild("HumanoidRootPart")
+    end
+
+    local function getHumanoid()
+        local c = LocalPlayer.Character
+        return c and c:FindFirstChildOfClass("Humanoid")
+    end
+
+    local function addButton(text, callback)
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 30)
+        btn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        btn.Text = text
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 9
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+        btn.Activated:Connect(callback)
+        return btn
+    end
 
     local function addToggle(text, callback)
         local state = false
         local btn = Instance.new("TextButton", container)
-        btn.Size = UDim2.new(1, 0, 0, 32)
+        btn.Size = UDim2.new(1, 0, 0, 30)
         btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
         btn.Text = text .. ": OFF 🔴"
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -490,22 +516,145 @@ wasteTimeBtn.Activated:Connect(function()
             btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
             callback(state)
         end)
+        return btn
     end
 
-    local speedActive = false
-    addToggle("⚡ Super WalkSpeed (100)", function(active)
-        speedActive = active
-        task.spawn(function()
-            while speedActive do
-                local char = LocalPlayer.Character
-                local hum = char and char:FindFirstChildOfClass("Humanoid")
-                if hum then hum.WalkSpeed = 100 end
-                task.wait(0.5)
-            end
-            local char = LocalPlayer.Character
-            local hum = char and char:FindFirstChildOfClass("Humanoid")
-            if hum then hum.WalkSpeed = 16 end
+    local function addTextBox(placeholder, callback)
+        local box = Instance.new("TextBox", container)
+        box.Size = UDim2.new(1, 0, 0, 30)
+        box.BackgroundColor3 = Color3.fromRGB(36, 36, 50)
+        box.PlaceholderText = placeholder
+        box.Text = ""
+        box.TextColor3 = Color3.fromRGB(255, 255, 255)
+        box.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
+        box.Font = Enum.Font.GothamMedium
+        box.TextSize = 9
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0, 6)
+
+        box.FocusLost:Connect(function(enterPressed)
+            if enterPressed then callback(box.Text) end
         end)
+        return box
+    end
+
+    local teleports = {
+        {name = "📍 Rebirth - Spawn Point", pos = Vector3.new(17.022, 3.476, 1.211)},
+        {name = "📚 The Library - 10M time", pos = Vector3.new(20.010, 51.124, 30.474)},
+        {name = "⭐ Stars - Star Zone", pos = Vector3.new(-189.233, 3.068, -5.366)},
+        {name = "🚀 The Future - 50Qa time", pos = Vector3.new(2041.580, 1375.783, -2876.962)},
+        {name = "🌌 The Void - 1Td time", pos = Vector3.new(1504.435, 1348.273, -2109.739)},
+        {name = "✨ The Zenith - 1Tvg time", pos = Vector3.new(1674.173, 381.373, -2857.851)},
+        {name = "🔥 Purgatory - Layer 2", pos = Vector3.new(1205.001, 86.541, -2855.153)},
+        {name = "🤖 The Cyber - 1Spqag time", pos = Vector3.new(1057.628, 1045.197, -2728.794)}
+    }
+
+    for _, tp in ipairs(teleports) do
+        addButton(tp.name, function()
+            local root = getRoot()
+            if root then root.CFrame = CFrame.new(tp.pos) end
+        end)
+    end
+
+    local autoRebirth = false
+    addToggle("🔄 Auto Rebirth (TP Loop)", function(active)
+        autoRebirth = active
+        if active then
+            task.spawn(function()
+                while autoRebirth do
+                    local root = getRoot()
+                    if root then root.CFrame = CFrame.new(17.022, 3.476, 1.211) end
+                    task.wait(0.5)
+                end
+            end)
+        end
+    end)
+
+    addTextBox("⚡ Set WalkSpeed (Default 16)", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then hum.WalkSpeed = val end
+    end)
+
+    addTextBox("🦘 Set JumpPower (Default 50)", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then hum.UseJumpPower = true hum.JumpPower = val end
+    end)
+
+    addToggle("🟢 Night Vision", function(active)
+        if active then
+            local cc = Instance.new("ColorCorrectionEffect")
+            cc.Name = "__VretaNightVision"
+            cc.TintColor = Color3.fromRGB(120, 255, 140)
+            cc.Contrast = 0.2
+            cc.Brightness = 0.05
+            cc.Saturation = 0.15
+            cc.Parent = Lighting
+
+            local bloom = Instance.new("BloomEffect")
+            bloom.Name = "__VretaNightVisionBloom"
+            bloom.Intensity = 0.25
+            bloom.Size = 18
+            bloom.Threshold = 0.8
+            bloom.Parent = Lighting
+        else
+            local cc = Lighting:FindFirstChild("__VretaNightVision")
+            local bloom = Lighting:FindFirstChild("__VretaNightVisionBloom")
+            if cc then cc:Destroy() end
+            if bloom then bloom:Destroy() end
+        end
+    end)
+
+    addButton("☀️ Fullbright (No Shadows)", function()
+        Lighting.Brightness = 2
+        Lighting.ClockTime = 14
+        Lighting.FogEnd = 100000
+        Lighting.GlobalShadows = false
+        Lighting.Ambient = Color3.fromRGB(178, 178, 178)
+    end)
+
+    addButton("🌑 Reset Lighting", function()
+        Lighting.Brightness = 1
+        Lighting.ClockTime = 14
+        Lighting.FogEnd = 10000
+        Lighting.GlobalShadows = true
+        Lighting.Ambient = Color3.fromRGB(0, 0, 0)
+    end)
+
+    local infJump = false
+    addToggle("🚀 Infinite Jump", function(active) infJump = active end)
+
+    UserInputService.JumpRequest:Connect(function()
+        if infJump then
+            local hum = getHumanoid()
+            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+        end
+    end)
+
+    local noclip = false
+    addToggle("👻 Noclip", function(active) noclip = active end)
+
+    RunService.Stepped:Connect(function()
+        if noclip then
+            local char = LocalPlayer.Character
+            if char then
+                for _, part in pairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then part.CanCollide = false end
+                end
+            end
+        end
+    end)
+
+    addButton("🔄 Reset Stats to Default", function()
+        local hum = getHumanoid()
+        if hum then
+            hum.WalkSpeed = 16
+            hum.JumpPower = 50
+        end
+    end)
+
+    addButton("🌐 Rejoin Server", function()
+        TeleportService:Teleport(game.PlaceId, LocalPlayer)
     end)
 end)
 
@@ -1261,7 +1410,7 @@ ninjaKeyboardBtn.Activated:Connect(function()
 end)
 
 -- ========================================================
--- NATIVE MODULE 7: +1 SPEED MONKEY ESCAPE (SLIM UI)
+-- NATIVE MODULE 7: +1 SPEED MONKEY ESCAPE
 -- ========================================================
 monkeyEscapeBtn.Activated:Connect(function()
     closeLoader()
@@ -1272,7 +1421,6 @@ monkeyEscapeBtn.Activated:Connect(function()
     gui.ResetOnSpawn = false
     gui.Parent = parentGui
 
-    -- Slimmer, more compact mobile UI size
     local main = Instance.new("Frame")
     main.Size = UDim2.new(0, 290, 0, 240)
     main.Position = UDim2.new(0.5, -145, 0.35, -120)
@@ -1351,7 +1499,6 @@ monkeyEscapeBtn.Activated:Connect(function()
         return btn
     end
 
-    -- W1, W2, W3 Wins Drop Loops
     local function addWinsLoop(name, targetPos)
         local activeState = false
         addToggle(name, function(active)
@@ -1372,7 +1519,6 @@ monkeyEscapeBtn.Activated:Connect(function()
     addWinsLoop("🏆 W2 Wins", Vector3.new(-3608, 154, -9380))
     addWinsLoop("🏆 W3 Wins", Vector3.new(-8079, 282, 2743))
 
-    -- Treadmills
     local function addTreadmillToggle(name, targetPos)
         local activeState = false
         addToggle(name, function(active)
@@ -1394,6 +1540,264 @@ monkeyEscapeBtn.Activated:Connect(function()
 
     addTreadmillToggle("🏃‍♂️ 1.5x Treadmill", Vector3.new(-453, 26, 2701))
     addTreadmillToggle("🏃‍♂️ 1x Treadmill", Vector3.new(-441, 26, 2701))
+end)
 
-    print("🐒 Vreta Hub — Slim +1 Speed Monkey Escape Loaded!")
+-- ========================================================
+-- NATIVE MODULE 8: +1 FLY FOR BRAINROTS (MINI UI)
+-- ========================================================
+brainrotsFlyBtn.Activated:Connect(function()
+    closeLoader()
+    if parentGui:FindFirstChild("VretaBrainrotsGui") then parentGui.VretaBrainrotsGui:Destroy() end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaBrainrotsGui"
+    gui.ResetOnSpawn = false
+    gui.Parent = parentGui
+
+    local main = Instance.new("Frame")
+    main.Size = UDim2.new(0, 220, 0, 260)
+    main.Position = UDim2.new(0.5, -110, 0.35, -130)
+    main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+    main.Active = true
+    main.Draggable = true
+    main.Parent = gui
+
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
+    local stroke = Instance.new("UIStroke", main)
+    stroke.Color = Color3.fromRGB(175, 115, 255)
+    stroke.Thickness = 1.5
+
+    local topBar = Instance.new("Frame", main)
+    topBar.Size = UDim2.new(1, 0, 0, 26)
+    topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+    Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 8)
+
+    local title = Instance.new("TextLabel", topBar)
+    title.Size = UDim2.new(1, -30, 1, 0)
+    title.Position = UDim2.new(0, 8, 0, 0)
+    title.BackgroundTransparency = 1
+    title.Text = "🧠 +1 FLY FOR BRAINROTS ⚡"
+    title.TextColor3 = Color3.fromRGB(200, 150, 255)
+    title.TextSize = 8
+    title.Font = Enum.Font.GothamBold
+    title.TextXAlignment = Enum.TextXAlignment.Left
+
+    local closeBtn = Instance.new("TextButton", topBar)
+    closeBtn.Size = UDim2.new(0, 18, 0, 18)
+    closeBtn.Position = UDim2.new(1, -22, 0, 4)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+    closeBtn.Text = "×"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 10
+    closeBtn.Activated:Connect(function() gui:Destroy() end)
+
+    local container = Instance.new("ScrollingFrame", main)
+    container.Size = UDim2.new(0.92, 0, 1, -32)
+    container.Position = UDim2.new(0.04, 0, 0, 30)
+    container.BackgroundTransparency = 1
+    container.ScrollBarThickness = 2
+    container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+    local layout = Instance.new("UIListLayout", container)
+    layout.Padding = UDim.new(0, 4)
+
+    local function getRoot()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChild("HumanoidRootPart")
+    end
+
+    local function getHumanoid()
+        local char = LocalPlayer.Character
+        return char and char:FindFirstChildOfClass("Humanoid")
+    end
+
+    local function addNotification(msg)
+        local notif = Instance.new("TextLabel", container)
+        notif.Size = UDim2.new(1, 0, 0, 22)
+        notif.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        notif.TextColor3 = Color3.fromRGB(255, 255, 255)
+        notif.Text = "⚠️ " .. msg
+        notif.Font = Enum.Font.GothamBold
+        notif.TextSize = 8
+        Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 4)
+        task.delay(2, function() if notif then notif:Destroy() end end)
+    end
+
+    local function addButton(text, callback)
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 26)
+        btn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+        btn.Text = text
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamBold
+        btn.TextSize = 8
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+        btn.Activated:Connect(callback)
+        return btn
+    end
+
+    local function addToggle(text, callback)
+        local state = false
+        local btn = Instance.new("TextButton", container)
+        btn.Size = UDim2.new(1, 0, 0, 26)
+        btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+        btn.Text = text .. ": OFF 🔴"
+        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btn.Font = Enum.Font.GothamMedium
+        btn.TextSize = 8
+        Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+
+        btn.Activated:Connect(function()
+            state = not state
+            btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+            callback(state)
+        end)
+        return btn
+    end
+
+    local function addTextBox(placeholder, callback)
+        local box = Instance.new("TextBox", container)
+        box.Size = UDim2.new(1, 0, 0, 26)
+        box.BackgroundColor3 = Color3.fromRGB(36, 36, 50)
+        box.PlaceholderText = placeholder
+        box.Text = ""
+        box.TextColor3 = Color3.fromRGB(255, 255, 255)
+        box.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
+        box.Font = Enum.Font.GothamMedium
+        box.TextSize = 8
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0, 5)
+
+        box.FocusLost:Connect(function(enterPressed)
+            if enterPressed then callback(box.Text) end
+        end)
+        return box
+    end
+
+    addButton("💎 Emerald Area", function()
+        local root = getRoot()
+        if root then root.CFrame = CFrame.new(-114.1, 3114.1, 3714.6) end
+    end)
+
+    addButton("🏠 Spawn Point", function()
+        local root = getRoot()
+        if root then root.CFrame = CFrame.new(15.7, 3.1, 10.7) end
+    end)
+
+    local autoCollectActive = false
+    addToggle("💰 Auto Collect Cash", function(active)
+        autoCollectActive = active
+        if active then
+            task.spawn(function()
+                while autoCollectActive do
+                    pcall(function()
+                        local myName = LocalPlayer.Name:lower()
+                        local myDisplayName = LocalPlayer.DisplayName:lower()
+                        for _, obj in ipairs(workspace:GetDescendants()) do
+                            if obj:IsA("Model") or obj:IsA("Folder") then
+                                local objName = obj.Name:lower()
+                                if objName:find(myName) or objName:find(myDisplayName) then
+                                    local collector = obj:FindFirstChild("Collector", true) or obj:FindFirstChild("Collect", true) or obj:FindFirstChild("CollectPart", true)
+                                    if collector and collector:IsA("BasePart") then
+                                        local root = getRoot()
+                                        if root then root.CFrame = collector.CFrame + Vector3.new(0, 2, 0) end
+                                    end
+                                end
+                            end
+                        end
+                    end)
+                    task.wait(1)
+                end
+            end)
+        end
+    end)
+
+    local autoRebirthActive = false
+    addToggle("🔄 Auto Rebirth", function(active)
+        autoRebirthActive = active
+        if active then
+            task.spawn(function()
+                while autoRebirthActive do
+                    pcall(function()
+                        local remotes = ReplicatedStorage:FindFirstChild("Remotes", true) or ReplicatedStorage
+                        for _, remote in ipairs(remotes:GetDescendants()) do
+                            if remote:IsA("RemoteEvent") and (remote.Name:lower():find("rebirth") or remote.Name:lower():find("reborn")) then
+                                remote:FireServer()
+                            end
+                        end
+                    end)
+                    task.wait(1)
+                end
+            end)
+        end
+    end)
+
+    addTextBox("⚡ Speed {Enter Speed}", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then 
+            hum.WalkSpeed = val 
+            addNotification("Speed set: " .. val)
+        end
+    end)
+
+    addTextBox("🦘 JumpPower {Enter Power}", function(text)
+        local val = tonumber(text)
+        local hum = getHumanoid()
+        if val and hum then 
+            hum.UseJumpPower = true 
+            hum.JumpPower = val 
+            addNotification("JumpPower set: " .. val)
+        end
+    end)
+
+    local flySpeedVal = 50
+    addTextBox("✈️ Fly Speed (Default 50)", function(text)
+        local val = tonumber(text)
+        if val then 
+            flySpeedVal = val 
+            addNotification("Fly Speed set: " .. val)
+        end
+    end)
+
+    local flying = false
+    addToggle("✈️ Toggle User Fly", function(active)
+        flying = active
+        if flying then
+            task.spawn(function()
+                local bg = Instance.new("BodyGyro")
+                local bv = Instance.new("BodyVelocity")
+                bg.P = 9e4
+                bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
+                bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
+                
+                while flying do
+                    local root = getRoot()
+                    local camera = workspace.CurrentCamera
+                    if root and camera then
+                        if not bg.Parent then bg.Parent = root end
+                        if not bv.Parent then bv.Parent = root end
+                        bg.CFrame = camera.CFrame
+                        
+                        local moveDir = Vector3.new()
+                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camera.CFrame.LookVector end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camera.CFrame.LookVector end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camera.CFrame.RightVector end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camera.CFrame.RightVector end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+                        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0, 1, 0) end
+                        
+                        bv.Velocity = moveDir * flySpeedVal
+                    else
+                        if bg.Parent then bg:Destroy() end
+                        if bv.Parent then bv:Destroy() end
+                    end
+                    RunService.RenderStepped:Wait()
+                end
+                if bg.Parent then bg:Destroy() end
+                if bv.Parent then bv:Destroy() end
+            end)
+        end
+    end)
 end)
