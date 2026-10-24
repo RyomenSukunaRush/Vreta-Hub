@@ -1801,3 +1801,374 @@ brainrotsFlyBtn.Activated:Connect(function()
         end
     end)
 end)
+-- ========================================================
+-- NATIVE MODULE 9: HIDE AND SEEK EXTREME (AUTO-ATTACH)
+-- ========================================================
+task.spawn(function()
+    local loaderGui = parentGui:WaitForChild("VretaHubMasterLoader", 5)
+    if not loaderGui then return end
+    
+    local pageVreta = loaderGui:FindFirstChild("ScrollingFrame", true)
+    if not pageVreta then return end
+
+    local hideSeekBtn = Instance.new("TextButton")
+    hideSeekBtn.Size = UDim2.new(1, -6, 0, 40)
+    hideSeekBtn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+    hideSeekBtn.Text = "🙈 Hide and Seek Extreme"
+    hideSeekBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    hideSeekBtn.Font = Enum.Font.GothamBold
+    hideSeekBtn.TextSize = 12
+    hideSeekBtn.Parent = pageVreta
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = hideSeekBtn
+
+    hideSeekBtn.Activated:Connect(function()
+        if parentGui:FindFirstChild("VretaHubMasterLoader") then
+            parentGui.VretaHubMasterLoader:Destroy()
+        end
+        if parentGui:FindFirstChild("VretaHideAndSeekGui") then
+            parentGui.VretaHideAndSeekGui:Destroy()
+        end
+
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "VretaHideAndSeekGui"
+        gui.ResetOnSpawn = false
+        gui.Parent = parentGui
+
+        local main = Instance.new("Frame")
+        main.Size = UDim2.new(0, 230, 0, 280)
+        main.Position = UDim2.new(0.5, -115, 0.35, -140)
+        main.BackgroundColor3 = Color3.fromRGB(16, 16, 24)
+        main.Active = true
+        main.Draggable = true
+        main.Parent = gui
+
+        Instance.new("UICorner", main).CornerRadius = UDim.new(0, 8)
+        local stroke = Instance.new("UIStroke", main)
+        stroke.Color = Color3.fromRGB(175, 115, 255)
+        stroke.Thickness = 1.5
+
+        local topBar = Instance.new("Frame", main)
+        topBar.Size = UDim2.new(1, 0, 0, 26)
+        topBar.BackgroundColor3 = Color3.fromRGB(24, 24, 36)
+        Instance.new("UICorner", topBar).CornerRadius = UDim.new(0, 8)
+
+        local title = Instance.new("TextLabel", topBar)
+        title.Size = UDim2.new(1, -30, 1, 0)
+        title.Position = UDim2.new(0, 8, 0, 0)
+        title.BackgroundTransparency = 1
+        title.Text = "🙈 HIDE AND SEEK EXTREME ⚡"
+        title.TextColor3 = Color3.fromRGB(200, 150, 255)
+        title.TextSize = 8
+        title.Font = Enum.Font.GothamBold
+        title.TextXAlignment = Enum.TextXAlignment.Left
+
+        local closeBtn = Instance.new("TextButton", topBar)
+        closeBtn.Size = UDim2.new(0, 18, 0, 18)
+        closeBtn.Position = UDim2.new(1, -22, 0, 4)
+        closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 70)
+        closeBtn.Text = "×"
+        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        closeBtn.Font = Enum.Font.GothamBold
+        closeBtn.TextSize = 10
+        closeBtn.Activated:Connect(function() gui:Destroy() end)
+
+        local container = Instance.new("ScrollingFrame", main)
+        container.Size = UDim2.new(0.92, 0, 1, -32)
+        container.Position = UDim2.new(0.04, 0, 0, 30)
+        container.BackgroundTransparency = 1
+        container.ScrollBarThickness = 2
+        container.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+        local layout = Instance.new("UIListLayout", container)
+        layout.Padding = UDim.new(0, 4)
+
+        local function getRoot()
+            local char = LocalPlayer.Character
+            return char and char:FindFirstChild("HumanoidRootPart")
+        end
+
+        local function getHumanoid()
+            local char = LocalPlayer.Character
+            return char and char:FindFirstChildOfClass("Humanoid")
+        end
+
+        local function addNotification(msg)
+            local notif = Instance.new("TextLabel", container)
+            notif.Size = UDim2.new(1, 0, 0, 22)
+            notif.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+            notif.TextColor3 = Color3.fromRGB(255, 255, 255)
+            notif.Text = "⚠️ " .. msg
+            notif.Font = Enum.Font.GothamBold
+            notif.TextSize = 8
+            Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 4)
+            task.delay(2, function() if notif then notif:Destroy() end end)
+        end
+
+        local function addButton(text, callback)
+            local btn = Instance.new("TextButton", container)
+            btn.Size = UDim2.new(1, 0, 0, 26)
+            btn.BackgroundColor3 = Color3.fromRGB(140, 75, 230)
+            btn.Text = text
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.Font = Enum.Font.GothamBold
+            btn.TextSize = 8
+            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+            btn.Activated:Connect(callback)
+            return btn
+        end
+
+        local function addToggle(text, callback)
+            local state = false
+            local btn = Instance.new("TextButton", container)
+            btn.Size = UDim2.new(1, 0, 0, 26)
+            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+            btn.Text = text .. ": OFF 🔴"
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.Font = Enum.Font.GothamMedium
+            btn.TextSize = 8
+            Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 5)
+
+            btn.Activated:Connect(function()
+                state = not state
+                btn.BackgroundColor3 = state and Color3.fromRGB(140, 75, 230) or Color3.fromRGB(30, 30, 42)
+                btn.Text = text .. ": " .. (state and "ON 🟢" or "OFF 🔴")
+                callback(state)
+            end)
+            return btn
+        end
+
+        local function addTextBox(placeholder, callback)
+            local box = Instance.new("TextBox", container)
+            box.Size = UDim2.new(1, 0, 0, 26)
+            box.BackgroundColor3 = Color3.fromRGB(36, 36, 50)
+            box.PlaceholderText = placeholder
+            box.Text = ""
+            box.TextColor3 = Color3.fromRGB(255, 255, 255)
+            box.PlaceholderColor3 = Color3.fromRGB(150, 150, 170)
+            box.Font = Enum.Font.GothamMedium
+            box.TextSize = 8
+            Instance.new("UICorner", box).CornerRadius = UDim.new(0, 5)
+
+            box.FocusLost:Connect(function(enterPressed)
+                if enterPressed then callback(box.Text) end
+            end)
+            return box
+        end
+
+        local function getActiveCoins()
+            local coins = {}
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if (obj:IsA("BasePart") or obj:IsA("Model")) and not obj:IsDescendantOf(LocalPlayer.Character or workspace) then
+                    local name = obj.Name:lower()
+                    if name:find("coin") or name:find("credit") or name:find("token") then
+                        table.insert(coins, obj)
+                    end
+                end
+            end
+            return coins
+        end
+
+        local hunting = false
+        addToggle("🔪 Hunt Players [IT Only]", function(active)
+            hunting = active
+            if active then
+                task.spawn(function()
+                    while hunting do
+                        local myRoot = getRoot()
+                        if myRoot then
+                            for _, player in ipairs(Players:GetPlayers()) do
+                                if player ~= LocalPlayer and player.Character then
+                                    local targetRoot = player.Character:FindFirstChild("HumanoidRootPart")
+                                    local hum = player.Character:FindFirstChildOfClass("Humanoid")
+                                    if targetRoot and hum and hum.Health > 0 then
+                                        myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 0.1)
+                                        task.wait(0.1)
+                                    end
+                                end
+                            end
+                        end
+                        task.wait(0.05)
+                    end
+                end)
+            end
+        end)
+
+        addButton("🗺️ Goto Map", function()
+            local root = getRoot()
+            if root then root.CFrame = CFrame.new(-6, 38, -5) end
+        end)
+
+        addButton("🙈 Hide Spot", function()
+            local root = getRoot()
+            if root then root.CFrame = CFrame.new(5, 404, 91) end
+        end)
+
+        local playerEspActive = false
+        addToggle("👁️ ESP Players", function(active)
+            playerEspActive = active
+            task.spawn(function()
+                while playerEspActive do
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        if p ~= LocalPlayer and p.Character then
+                            local hl = p.Character:FindFirstChild("HSEPlayerHighlight")
+                            if not hl then
+                                hl = Instance.new("Highlight")
+                                hl.Name = "HSEPlayerHighlight"
+                                hl.FillColor = Color3.fromRGB(255, 50, 50)
+                                hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                                hl.Parent = p.Character
+                            end
+                        end
+                    end
+                    task.wait(1)
+                end
+                for _, p in ipairs(Players:GetPlayers()) do
+                    if p.Character and p.Character:FindFirstChild("HSEPlayerHighlight") then
+                        p.Character.HSEPlayerHighlight:Destroy()
+                    end
+                end
+            end)
+        end)
+
+        local coinEspActive = false
+        addToggle("🪙 ESP Coins", function(active)
+            coinEspActive = active
+            task.spawn(function()
+                while coinEspActive do
+                    local foundCoins = getActiveCoins()
+                    for _, obj in ipairs(foundCoins) do
+                        local hl = obj:FindFirstChild("HSECoinHighlight")
+                        if not hl then
+                            hl = Instance.new("Highlight")
+                            hl.Name = "HSECoinHighlight"
+                            hl.FillColor = Color3.fromRGB(255, 215, 0)
+                            hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+                            hl.Parent = obj
+                        end
+                    end
+                    task.wait(1.5)
+                end
+                for _, obj in ipairs(workspace:GetDescendants()) do
+                    if obj:FindFirstChild("HSECoinHighlight") then
+                        obj.HSECoinHighlight:Destroy()
+                    end
+                end
+            end)
+        end)
+
+        local coinFarmActive = false
+        addToggle("💰 Coin Farm", function(active)
+            coinFarmActive = active
+            if active then
+                task.spawn(function()
+                    while coinFarmActive do
+                        local root = getRoot()
+                        if root then
+                            local foundCoins = getActiveCoins()
+                            for _, obj in ipairs(foundCoins) do
+                                if not coinFarmActive then break end
+                                if obj and obj.Parent then
+                                    local cf = obj:IsA("BasePart") and obj.CFrame or (obj:IsA("Model") and obj:GetPivot())
+                                    if cf then
+                                        root.CFrame = cf
+                                        local touch = obj:FindFirstChildOfClass("TouchTransmitter") or (obj:IsA("BasePart") and obj)
+                                        if touch and firetouchinterest then
+                                            pcall(function() firetouchinterest(root, obj:IsA("BasePart") and obj or touch.Parent, 0) end)
+                                            pcall(function() firetouchinterest(root, obj:IsA("BasePart") and obj or touch.Parent, 1) end)
+                                        end
+                                        task.wait(0.15)
+                                    end
+                                end
+                            end
+                        end
+                        task.wait(0.5)
+                    end
+                end)
+            end
+        end)
+
+        addTextBox("⚡ Speed {Enter Speed}", function(text)
+            local val = tonumber(text)
+            local hum = getHumanoid()
+            if val and hum then 
+                hum.WalkSpeed = val 
+                addNotification("Speed set: " .. val)
+            end
+        end)
+
+        addTextBox("🦘 Jump {Enter JumpPower}", function(text)
+            local val = tonumber(text)
+            local hum = getHumanoid()
+            if val and hum then 
+                hum.UseJumpPower = true 
+                hum.JumpPower = val 
+                addNotification("JumpPower set: " .. val)
+            end
+        end)
+
+        local infJumpActive = false
+        addToggle("🚀 Infinite Jump", function(active)
+            infJumpActive = active
+        end)
+
+        UserInputService.JumpRequest:Connect(function()
+            if infJumpActive then
+                local hum = getHumanoid()
+                if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+            end
+        end)
+
+        local flySpeedVal = 50
+        addTextBox("✈️ Fly Speed (Default 50)", function(text)
+            local val = tonumber(text)
+            if val then 
+                flySpeedVal = val 
+                addNotification("Fly Speed set: " .. val)
+            end
+        end)
+
+        local flying = false
+        addToggle("✈️ Toggle Fly", function(active)
+            flying = active
+            if flying then
+                task.spawn(function()
+                    local bg = Instance.new("BodyGyro")
+                    local bv = Instance.new("BodyVelocity")
+                    bg.P = 9e4
+                    bg.MaxTorque = Vector3.new(9e4, 9e4, 9e4)
+                    bv.MaxForce = Vector3.new(9e4, 9e4, 9e4)
+
+                    while flying do
+                        local root = getRoot()
+                        local camera = workspace.CurrentCamera
+                        if root and camera then
+                            if not bg.Parent then bg.Parent = root end
+                            if not bv.Parent then bv.Parent = root end
+                            bg.CFrame = camera.CFrame
+
+                            local moveDir = Vector3.new()
+                            if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + camera.CFrame.LookVector end
+                            if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - camera.CFrame.LookVector end
+                            if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - camera.CFrame.RightVector end
+                            if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + camera.CFrame.RightVector end
+                            if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+                            if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0, 1, 0) end
+
+                            bv.Velocity = moveDir * flySpeedVal
+                        else
+                            if bg.Parent then bg:Destroy() end
+                            if bv.Parent then bv:Destroy() end
+                        end
+                        RunService.RenderStepped:Wait()
+                    end
+
+                    if bg.Parent then bg:Destroy() end
+                    if bv.Parent then bv:Destroy() end
+                end)
+            end
+        end)
+    end)
+end)
