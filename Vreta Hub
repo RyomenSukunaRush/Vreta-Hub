@@ -1,5 +1,5 @@
--- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (MODULE 8 ADDED) 🌙⚡ ]]
--- Compatible with Delta, Arceus X, CodeX, and Studio
+-- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
+-- Compatible with Delta, Arceus X, CodeX, Wave, Solara, Cryptic, VegaX, And More
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -15,8 +15,9 @@ local LocalPlayer = Players.LocalPlayer
 -- Verified Squad Roles Mapping
 local squadRoles = {
     [10789290369] = "Vreta Creator",
-    [9605585193]  = "Vreta Admin",
     [8963902794]  = "Vreta Creator's BFF",
+    [11757238621] = "Vreta Creator ALT",
+    [9605585193]  = "Vreta Admin",
     [11690731723] = "Vreta Admin",
     [11046152137] = "Vreta Admin",
     [6145072861]  = "Vreta Admin"
@@ -298,6 +299,7 @@ addExternalScriptButton("+1 Tongue Escape {Keyless}", "https://rawscripts.net/ra
 addExternalScriptButton("+1 Shrink Per Step {Keyless}", "https://scriptblox.com/raw/NEW-CUBES+1-Shrink-per-Step-Radium-Hub-Shrink-Per-Step-225259")
 addExternalScriptButton("MM2 {Keyless}", "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader")
 addExternalScriptButton("Infinite Yield Admin", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source")
+addExternalScriptButton("Barry's Prison Run {Keyless}", "https://scriptblox.com/raw/BARRY'S-PRISON-RUN!-(OBBY)-BARRY'S-PRISON-RUN-MENU-RANOYSD-PLUS-230406")
 
 
 -- ========================================================
