@@ -298,6 +298,7 @@ addExternalScriptButton("+1 Tongue Escape {Keyless}", "https://rawscripts.net/ra
 addExternalScriptButton("+1 Shrink Per Step {Keyless}", "https://scriptblox.com/raw/NEW-CUBES+1-Shrink-per-Step-Radium-Hub-Shrink-Per-Step-225259")
 addExternalScriptButton("MM2 {Keyless}", "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader")
 addExternalScriptButton("Infinite Yield Admin", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source")
+addExternalScriptButton("Barry's Prison Run {Keyless}", "https://scriptblox.com/raw/BARRY'S-PRISON-RUN!-(OBBY)-BARRY'S-PRISON-RUN-MENU-RANOYSD-PLUS-230406")
 
 
 -- ========================================================
