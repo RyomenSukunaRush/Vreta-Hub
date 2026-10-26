@@ -1,5 +1,5 @@
 -- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
--- Compatible with Delta, Arceus X, CodeX, and Studio
+-- Compatible with Delta, Arceus X, CodeX, Wave, Solara, Cryptic, VegaX, And More
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
