@@ -1,4 +1,4 @@
--- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION (MODULE 8 ADDED) 🌙⚡ ]]
+-- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
 -- Compatible with Delta, Arceus X, CodeX, and Studio
 
 local Players = game:GetService("Players")
@@ -15,8 +15,9 @@ local LocalPlayer = Players.LocalPlayer
 -- Verified Squad Roles Mapping
 local squadRoles = {
     [10789290369] = "Vreta Creator",
-    [9605585193]  = "Vreta Admin",
     [8963902794]  = "Vreta Creator's BFF",
+    [11757238621]  = "Vreta Creator ALT",
+    [9605585193]  = "Vreta Admin",
     [11690731723] = "Vreta Admin",
     [11046152137] = "Vreta Admin",
     [6145072861]  = "Vreta Admin"
