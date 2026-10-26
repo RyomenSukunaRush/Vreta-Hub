@@ -2172,3 +2172,33 @@ task.spawn(function()
         end)
     end)
 end)
+-- ========================================================
+-- COMMUNITY MODULE: BARRY'S PRISON RUN! (AUTO-ATTACH)
+-- Paste this at the absolute bottom of your Master Loader script
+-- ========================================================
+task.spawn(function()
+    local loaderGui = parentGui:WaitForChild("VretaHubMasterLoader", 5)
+    if not loaderGui then return end
+    
+    -- Others tab ka container dhoondne ke liye (agar 'pageOthers' global nahi hai toh scrolling frame se utha lega)
+    local pageOthers = loaderGui:FindFirstChild("ScrollingFrame", true)
+    if not pageOthers then return end
+
+    local extBtn = Instance.new("TextButton")
+    extBtn.Size = UDim2.new(1, -6, 0, 40)
+    extBtn.BackgroundColor3 = Color3.fromRGB(32, 32, 46)
+    extBtn.Text = "⚡ Barry's Prison Run! (Menu)"
+    extBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    extBtn.Font = Enum.Font.GothamMedium
+    extBtn.TextSize = 11
+    extBtn.Parent = pageOthers
+
+    local extCorner = Instance.new("UICorner")
+    extCorner.CornerRadius = UDim.new(0, 8)
+    extCorner.Parent = extBtn
+
+    extBtn.Activated:Connect(function()
+        if loaderGui then loaderGui:Destroy() end
+        loadstring(game:HttpGet("https://scriptblox.com/raw/BARRY'S-PRISON-RUN!-(OBBY)-BARRY'S-PRISON-RUN-MENU-RANOYSD-PLUS-230406"))()
+    end)
+end)
