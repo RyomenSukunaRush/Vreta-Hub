@@ -1,3 +1,31 @@
+print("VRETA STARTED")
+
+local success, err = pcall(function()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+
+    assert(player, "LocalPlayer is nil")
+
+    local playerGui = player:WaitForChild("PlayerGui", 10)
+    assert(playerGui, "PlayerGui nahi mila")
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "VretaStartupTest"
+    gui.ResetOnSpawn = false
+    gui.Parent = playerGui
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.fromOffset(300, 80)
+    label.Position = UDim2.fromScale(0.5, 0.5)
+    label.AnchorPoint = Vector2.new(0.5, 0.5)
+    label.Text = "VRETA HUB STARTED"
+    label.TextScaled = true
+    label.Parent = gui
+end)
+
+if not success then
+    warn("VRETA ERROR: " .. tostring(err))
+end
 -- [[ VRETA HUB V1 — DUAL ENGINE MASTER EDITION 🌙⚡ ]]
 -- Compatible with Delta, Arceus X, CodeX, Wave, Solara, Cryptic, VegaX, And More
 
