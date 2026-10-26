@@ -1987,7 +1987,7 @@ task.spawn(function()
                                     local hum = player.Character:FindFirstChildOfClass("Humanoid")
                                     if targetRoot and hum and hum.Health > 0 then
                                         myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 0.1)
-                                        task.wait(0.1)
+                                        task.wait(0.5)
                                     end
                                 end
                             end
@@ -1998,7 +1998,7 @@ task.spawn(function()
             end
         end)
 
-        addButton("🗺️ Goto Map", function()
+        addButton("🗺️ Goto Map [may not work in some maps]", function()
             local root = getRoot()
             if root then root.CFrame = CFrame.new(-6, 38, -5) end
         end)
